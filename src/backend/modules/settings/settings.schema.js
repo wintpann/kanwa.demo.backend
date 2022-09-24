@@ -1,10 +1,10 @@
 import * as Yup from 'yup';
-import { LabelSchema } from '../label/label.schema.js';
-import { PrioritySchema } from '../priority/priority.schema.js';
+import { LabelSchemaDB } from '../label/label.schema.js';
+import { PrioritySchemaDB } from '../priority/priority.schema.js';
 
-const SettingsSchema = Yup.object().shape({
-    labels: Yup.array().of(LabelSchema).required(),
-    priorities: Yup.array().of(PrioritySchema).required(),
+const SettingsSchemaDB = Yup.object().shape({
+    labels: Yup.array().of(LabelSchemaDB).required(),
+    priorities: Yup.array().of(PrioritySchemaDB).required(),
 });
 
-export { SettingsSchema };
+export { SettingsSchemaDB };

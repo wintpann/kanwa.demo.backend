@@ -1,8 +1,9 @@
 const DB_INITIAL = {
     comments: [],
-    labels: [],
-    priorities: [],
-    settings: [],
+    settings: {
+        labels: [],
+        priorities: [],
+    },
     todos: [],
     users: [],
 };

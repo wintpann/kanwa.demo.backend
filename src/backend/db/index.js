@@ -12,6 +12,7 @@ const initLowDB = async () => {
         await db.read();
         await DBSchema.validate(db.data, { strict: true });
     } catch (e) {
+        console.log('LOOOG', e);
         db.data = DB_INITIAL;
     }
 
