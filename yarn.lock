@@ -1537,11 +1537,6 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@kanwa/di@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@kanwa/di/-/di-0.0.1.tgz#3bc9c4b878cc087671ee2bb9dc49e22b45316149"
-  integrity sha512-eUsFfSTZHUEprGYRGg7Fw1cl6BgBNEWT3PPsM7zRWWPIimNVG/4MhJhp1U1+sIn/xa7yQ5u80L97xAA0ZnrKSw==
-
 "@leichtgewicht/ip-codec@^2.0.1":
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"

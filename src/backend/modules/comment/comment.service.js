@@ -1,5 +1,5 @@
-import { di } from '@kanwa/di';
 import { v4 } from 'uuid';
+import { di } from '../../utils/di.js';
 import { omit } from '../../utils/common.js';
 
 const cleanup = omit('userId', 'todoId');

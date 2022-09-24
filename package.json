@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "private": false,
   "dependencies": {
-    "@kanwa/di": "^0.0.1",
     "@types/react": "18.0.20",
     "@types/react-dom": "18.0.6",
     "@typescript-eslint/eslint-plugin": "^4.29.1",

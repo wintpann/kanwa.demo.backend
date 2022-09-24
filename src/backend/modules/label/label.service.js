@@ -1,4 +1,4 @@
-import { di } from '@kanwa/di';
+import { di } from '../../utils/di.js';
 import { v4 } from 'uuid';
 import { omit } from '../../utils/common.js';
 
