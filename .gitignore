@@ -7,4 +7,4 @@ yarn-error.log*
 .idea
 .vscode
 
-src/backend/db.json
+src/backend/db/db.json
