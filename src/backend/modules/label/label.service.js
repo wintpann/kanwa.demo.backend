@@ -1,21 +1,24 @@
 import { v4 } from 'uuid';
 import { di } from '../../utils/di.js';
 
-const labelService = di.record(di.key()('db'), (db) => ({
-    getById: async (id) => {
+const LabelService = di.record(di.key()('db'), (db) => {
+    const getById = async (id) => {
         return db.data.labels.find((label) => label.id === id);
-    },
-    getUserLabels: async (userId, active) => {
+    };
+
+    const getUserLabels = async (userId, active) => {
         return db.data.labels.filter((label) => {
             const sameId = label.userId === userId;
             const sameActive = active !== undefined ? true : label.active === active;
             return sameId && sameActive;
         });
-    },
-    getTodoLabels: async (todoId) => {
+    };
+
+    const getTodoLabels = async (todoId) => {
         return db.data.labels.filter((label) => label.todoId === todoId);
-    },
-    createLabel: async (title, userId) => {
+    };
+
+    const createLabel = async (title, userId) => {
         const label = {
             title,
             userId,
@@ -26,8 +29,9 @@ const labelService = di.record(di.key()('db'), (db) => ({
 
         await db.write();
         return label;
-    },
-    updateLabel: async (id, callback) => {
+    };
+
+    const updateLabel = async (id, callback) => {
         const labelIndex = db.data.labels.findIndex((label) => label.id === id);
 
         if (labelIndex === -1) throw new Error('No label was found by id', id);
@@ -38,7 +42,15 @@ const labelService = di.record(di.key()('db'), (db) => ({
 
         await db.write();
         return updated;
-    },
-}));
+    };
 
-export { labelService };
+    return {
+        getById,
+        getUserLabels,
+        getTodoLabels,
+        createLabel,
+        updateLabel,
+    };
+});
+
+export { LabelService };

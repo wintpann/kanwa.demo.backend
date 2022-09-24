@@ -1,17 +1,20 @@
 import { v4 } from 'uuid';
 import { di } from '../../utils/di.js';
 
-const commentService = di.record(di.key()('db'), (db) => ({
-    getById: async (id) => {
+const CommentService = di.record(di.key()('db'), (db) => {
+    const getById = async (id) => {
         return db.data.comments.find((comment) => comment.id === id);
-    },
-    getUserComments: async (userId) => {
+    };
+
+    const getUserComments = async (userId) => {
         return db.data.comments.filter((comment) => comment.userId === userId);
-    },
-    getTodoComments: async (todoId) => {
+    };
+
+    const getTodoComments = async (todoId) => {
         return db.data.comments.filter((comment) => comment.todoId === todoId);
-    },
-    createComment: async (content, todoId, userId) => {
+    };
+
+    const createComment = async (content, todoId, userId) => {
         const comment = {
             content,
             todoId,
@@ -22,13 +25,22 @@ const commentService = di.record(di.key()('db'), (db) => ({
 
         await db.write();
         return comment;
-    },
-    deleteComment: async (id) => {
+    };
+
+    const deleteComment = async (id) => {
         const commentIndex = db.data.comments.findIndex((comment) => comment.id === id);
         db.data.comments.splice(commentIndex, 1);
 
         await db.write();
-    },
-}));
+    };
 
-export { commentService };
+    return {
+        getById,
+        getUserComments,
+        getTodoComments,
+        createComment,
+        deleteComment,
+    };
+});
+
+export { CommentService };
