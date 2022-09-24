@@ -1,22 +1,19 @@
 import { v4 } from 'uuid';
 import { di } from '../../utils/di.js';
-import { omit } from '../../utils/common.js';
-
-const cleanup = omit('userId');
-const sanitize = omit('id', 'userId');
 
 const labelService = di.record(di.key()('db'), (db) => ({
+    getById: async (id) => {
+        return db.data.labels.find((label) => label.id === id);
+    },
     getUserLabels: async (userId, active) => {
-        return db.data.labels
-            .filter((label) => {
-                const sameId = label.userId === userId;
-                const sameActive = active !== undefined ? true : label.active === active;
-                return sameId && sameActive;
-            })
-            .map(cleanup);
+        return db.data.labels.filter((label) => {
+            const sameId = label.userId === userId;
+            const sameActive = active !== undefined ? true : label.active === active;
+            return sameId && sameActive;
+        });
     },
     getTodoLabels: async (todoId) => {
-        return db.data.labels.filter((label) => label.todoId === todoId).map(cleanup);
+        return db.data.labels.filter((label) => label.todoId === todoId);
     },
     createLabel: async (title, userId) => {
         const label = {
@@ -26,14 +23,22 @@ const labelService = di.record(di.key()('db'), (db) => ({
             active: true,
         };
         db.data.labels.push(label);
+
         await db.write();
-        return cleanup(label);
+        return label;
     },
-    updateLabel: async (id, label) => {
+    updateLabel: async (id, callback) => {
         const labelIndex = db.data.labels.findIndex((label) => label.id === id);
-        const updated = { ...db.data.labels[labelIndex], ...sanitize(label) };
+
+        if (labelIndex === -1) throw new Error('No label was found by id', id);
+
+        const label = db.data.labels[labelIndex];
+        const updated = { ...label, ...callback(label) };
         db.data.labels[labelIndex] = updated;
+
         await db.write();
-        return cleanup(updated);
+        return updated;
     },
 }));
+
+export { labelService };

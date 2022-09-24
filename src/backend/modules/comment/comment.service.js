@@ -1,15 +1,15 @@
 import { v4 } from 'uuid';
 import { di } from '../../utils/di.js';
-import { omit } from '../../utils/common.js';
-
-const cleanup = omit('userId', 'todoId');
 
 const commentService = di.record(di.key()('db'), (db) => ({
+    getById: async (id) => {
+        return db.data.comments.find((comment) => comment.id === id);
+    },
     getUserComments: async (userId) => {
-        return db.data.comments.filter((comment) => comment.userId === userId).map(cleanup);
+        return db.data.comments.filter((comment) => comment.userId === userId);
     },
     getTodoComments: async (todoId) => {
-        return db.data.comments.filter((comment) => comment.todoId === todoId).map(cleanup);
+        return db.data.comments.filter((comment) => comment.todoId === todoId);
     },
     createComment: async (content, todoId, userId) => {
         const comment = {
@@ -19,12 +19,16 @@ const commentService = di.record(di.key()('db'), (db) => ({
             id: v4(),
         };
         db.data.comments.push(comment);
+
         await db.write();
-        return cleanup(comment);
+        return comment;
     },
     deleteComment: async (id) => {
         const commentIndex = db.data.comments.findIndex((comment) => comment.id === id);
         db.data.comments.splice(commentIndex, 1);
+
         await db.write();
     },
 }));
+
+export { commentService };
