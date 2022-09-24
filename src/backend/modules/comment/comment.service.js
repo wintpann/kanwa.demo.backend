@@ -23,7 +23,7 @@ const commentService = di.record(di.key()('db'), (db) => ({
         return cleanup(comment);
     },
     deleteComment: async (id) => {
-        const commentIndex = db.data.findIndex((comment) => comment.id === id);
+        const commentIndex = db.data.comments.findIndex((comment) => comment.id === id);
         db.data.comments.splice(commentIndex, 1);
         await db.write();
     },
