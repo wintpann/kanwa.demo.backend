@@ -7,11 +7,13 @@ const sanitize = omit('id', 'userId');
 
 const priorityService = di.record(di.key()('db'), (db) => ({
     getUserPriorities: async (userId, active) => {
-        return db.data.priorities.filter((priority) => {
-            const sameId = priority.userId === userId;
-            const sameActive = active !== undefined ? true : priority.active === active;
-            return sameId && sameActive;
-        }).map(cleanup);
+        return db.data.priorities
+            .filter((priority) => {
+                const sameId = priority.userId === userId;
+                const sameActive = active !== undefined ? true : priority.active === active;
+                return sameId && sameActive;
+            })
+            .map(cleanup);
     },
     getTodoPriority: async (todoId) => {
         const priority = db.data.priorities.find((priority) => priority.todoId === todoId);
@@ -36,5 +38,5 @@ const priorityService = di.record(di.key()('db'), (db) => ({
         db.data.priorities[priorityIndex] = updated;
         await db.write();
         return cleanup(updated);
-    }
+    },
 }));

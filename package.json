@@ -41,9 +41,9 @@
   "scripts": {
     "start:backend": "nodemon --ignore 'db.json' src/backend",
     "lint": "lint-staged",
-    "lint-all:tsx": "eslint src --fix --quiet",
-    "lint-all:css": "prettier --write \"./src/**/*.scss\" --no-error-on-unmatched-pattern",
-    "lint-all": "yarn lint-all:css && yarn lint-all:tsx",
+    "lint-all:eslint": "eslint src --fix --quiet --no-error-on-unmatched-pattern",
+    "lint-all:prettier": "prettier --write \"./src/**/*.{scss,js,ts,tsx}\" --no-error-on-unmatched-pattern",
+    "lint-all": "yarn lint-all:prettier && yarn lint-all:eslint",
     "prepare": "husky install"
   },
   "lint-staged": {
@@ -51,7 +51,7 @@
       "npx eslint --fix",
       "git add"
     ],
-    "src/**/*.scss": [
+    "src/**/*.{scss,js,ts,tsx}": [
       "npx prettier --write --no-error-on-unmatched-pattern",
       "git add"
     ]

@@ -7,11 +7,13 @@ const sanitize = omit('id', 'userId');
 
 const labelService = di.record(di.key()('db'), (db) => ({
     getUserLabels: async (userId, active) => {
-        return db.data.labels.filter((label) => {
-            const sameId = label.userId === userId;
-            const sameActive = active !== undefined ? true : label.active === active;
-            return sameId && sameActive;
-        }).map(cleanup);
+        return db.data.labels
+            .filter((label) => {
+                const sameId = label.userId === userId;
+                const sameActive = active !== undefined ? true : label.active === active;
+                return sameId && sameActive;
+            })
+            .map(cleanup);
     },
     getTodoLabels: async (todoId) => {
         return db.data.labels.filter((label) => label.todoId === todoId).map(cleanup);
@@ -33,5 +35,5 @@ const labelService = di.record(di.key()('db'), (db) => ({
         db.data.labels[labelIndex] = updated;
         await db.write();
         return cleanup(updated);
-    }
+    },
 }));
