@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import { resolve } from './utils/dirname.js';
 import { initLowDB } from './db/index.js';
-import { PingPongRouter } from './modules/ping-pong/ping-pong.router.js';
+import { createRouters } from './modules/routers.js';
 
 dotenv.config({ path: resolve(import.meta.url, '.env') });
 
@@ -15,7 +15,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
-app.use('/api', PingPongRouter);
-
 const db = await initLowDB();
+const Routers = createRouters({ db });
+
+app.use('/api', Routers.PingPongRouter);
+app.use('/api', Routers.UserRouter);
+
 app.listen(process.env.PORT, () => console.log('BACKEND IS RUNNING ON PORT', process.env.PORT));
