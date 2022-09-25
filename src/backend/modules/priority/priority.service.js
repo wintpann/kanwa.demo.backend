@@ -28,7 +28,7 @@ const PriorityService = di.record(di.key()('db'), (db) => {
             active: true,
         };
         db.data.priorities.push(priority);
-        await db.write();
+        db.update();
         return priority;
     };
 
@@ -40,7 +40,7 @@ const PriorityService = di.record(di.key()('db'), (db) => {
         const updated = { ...priority, ...callback(priority) };
         db.data.priorities[index] = updated;
 
-        await db.write();
+        db.update();
         return updated;
     };
 
@@ -49,7 +49,7 @@ const PriorityService = di.record(di.key()('db'), (db) => {
         if (!priority) throw new Error('No priority was found by id', id);
 
         db.data.priorities.splice(index, 1);
-        await db.write();
+        db.update();
     };
 
     return {

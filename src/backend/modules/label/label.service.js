@@ -24,7 +24,7 @@ const LabelService = di.record(di.key()('db'), (db) => {
         };
         db.data.labels.push(label);
 
-        await db.write();
+        db.update();
         return label;
     };
 
@@ -36,7 +36,7 @@ const LabelService = di.record(di.key()('db'), (db) => {
         const updated = { ...label, ...callback(label) };
         db.data.labels[index] = updated;
 
-        await db.write();
+        db.update();
         return updated;
     };
 
@@ -45,7 +45,7 @@ const LabelService = di.record(di.key()('db'), (db) => {
         if (!label) throw new Error('No label was found by id', id);
 
         db.data.labels.splice(index, 1);
-        await db.write();
+        db.update();
     };
 
     return {

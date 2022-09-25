@@ -12,11 +12,26 @@ const initLowDB = async () => {
         await db.read();
         await DBSchema.validate(db.data, { strict: true });
     } catch (e) {
-        console.log('LOOOG', e);
         db.data = DB_INITIAL;
     }
 
     await db.write();
+
+    let shouldWrite = false;
+    db.update = () => {
+        shouldWrite = true;
+    };
+
+    const writeCron = async () => {
+        if (shouldWrite) {
+            shouldWrite = false;
+            await db.write();
+        }
+
+        setTimeout(writeCron, 3000);
+    };
+
+    writeCron();
 
     return db;
 };

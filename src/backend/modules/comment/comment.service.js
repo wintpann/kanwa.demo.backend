@@ -24,7 +24,7 @@ const CommentService = di.record(di.key()('db'), (db) => {
         };
         db.data.comments.push(comment);
 
-        await db.write();
+        db.update();
         return comment;
     };
 
@@ -33,7 +33,7 @@ const CommentService = di.record(di.key()('db'), (db) => {
         if (!comment) throw new Error('No comment was found by id', id);
 
         db.data.comments.splice(index, 1);
-        await db.write();
+        db.update();
     };
 
     return {
