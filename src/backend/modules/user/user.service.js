@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 import { v4 as uuid } from 'uuid';
 import { di } from '../../utils/di.js';
 import { entityByPredicate } from '../../utils/common.js';
 import { ResponseError } from '../../utils/response.js';
-import bcrypt from 'bcryptjs';
 
 const UserService = di.record(di.key()('db'), (db) => {
     const createTokens = (user) => {
@@ -20,6 +20,23 @@ const UserService = di.record(di.key()('db'), (db) => {
             db.data.users,
             (user) => user.id === userLike.id || user.login === userLike.login,
         );
+    };
+
+    const createUser = async (userData) => {
+        const password = await bcrypt.hash(userData.password, 12);
+
+        const user = {
+            id: uuid(),
+            login: userData.login,
+            password,
+            refreshToken: '',
+            todoIds: [],
+        };
+
+        db.data.push(user);
+        db.update();
+
+        return user;
     };
 
     const updateUser = async (userLike, callback) => {
@@ -46,6 +63,7 @@ const UserService = di.record(di.key()('db'), (db) => {
         createTokens,
         getBy,
         updateUser,
+        createUser,
         validatePassword,
     };
 });

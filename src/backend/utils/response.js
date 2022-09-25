@@ -20,7 +20,7 @@ const respond = (res, code, data, message) => {
     res.status(code).json(response);
 };
 
-const createController = async (callback) => async (req, res) => {
+const createController = (callback) => async (req, res) => {
     try {
         await callback(req, res);
     } catch (e) {

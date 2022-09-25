@@ -6,6 +6,7 @@ const UserRouter = di.record(UserController, (UserController) => {
     const Router = ExpressRouter();
 
     Router.route('/user/login').get(UserController.login);
+    Router.route('/user/signup').get(UserController.signup);
 
     return Router;
 });

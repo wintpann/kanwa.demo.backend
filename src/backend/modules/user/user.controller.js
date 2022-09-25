@@ -1,6 +1,6 @@
 import { di } from '../../utils/di.js';
 import { UserService } from './user.service.js';
-import { LoginBodySchema } from './user.schema.js';
+import { LoginBodySchema, SignupBodySchema } from './user.schema.js';
 import {
     createController,
     mapToResponseError,
@@ -28,8 +28,23 @@ const UserController = di.record(UserService, (UserService) => ({
 
         respond(res, RESPONSE_CODE.OK, {
             user: cleanupUser(user),
-            accessToken: `Bearer ${accessToken}`,
-            refreshToken: `Bearer ${refreshToken}`,
+            accessToken,
+            refreshToken,
+        });
+    }),
+    signup: createController(async (req, res) => {
+        const { login, password } = await SignupBodySchema.validate(req.body.user).catch(
+            mapToResponseError('Login and password is required'),
+        );
+
+        const user = await UserService.createUser({ login, password });
+        const { accessToken, refreshToken } = UserService.createTokens(user);
+        await UserService.updateUser(user, (user) => ({ ...user, refreshToken }));
+
+        respond(res, RESPONSE_CODE.OK, {
+            user: cleanupUser(user),
+            accessToken,
+            refreshToken,
         });
     }),
 }));
