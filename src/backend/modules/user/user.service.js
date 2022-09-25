@@ -83,7 +83,6 @@ const UserService = di.record(di.key()('db'), (db) => {
         try {
             jwt.verify(authorization, process.env.JWT_SECRET);
         } catch (e) {
-            console.log(e);
             if (e instanceof jwt.TokenExpiredError) {
                 throw new ResponseError('AuthorizationTokenExpired', RESPONSE.AUTH_REQUIRED);
             } else {
