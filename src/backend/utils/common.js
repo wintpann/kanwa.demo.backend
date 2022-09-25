@@ -1,9 +1,15 @@
 import _omit from 'lodash/omit.js';
+import _pick from 'lodash/pick.js';
 
 const omit =
     (...keys) =>
     (object) =>
         _omit(object, keys);
+
+const pick =
+    (...keys) =>
+    (object) =>
+        _pick(object, keys);
 
 const entityByPredicate = (array, predicate) => {
     const index = array.findIndex(predicate);
@@ -12,4 +18,4 @@ const entityByPredicate = (array, predicate) => {
     return [array[index], index];
 };
 
-export { omit, entityByPredicate };
+export { omit, pick, entityByPredicate };

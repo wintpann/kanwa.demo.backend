@@ -5,7 +5,13 @@ const UserSchemaDB = Yup.object().shape({
     nickname: Yup.string().trim().required(),
     login: Yup.string().trim().required(),
     password: Yup.string().trim().required(),
+    refreshToken: Yup.string(),
     todos: Yup.array().of(Yup.string().trim().required()),
 });
 
-export { UserSchemaDB };
+const LoginBodySchema = Yup.object().shape({
+    login: Yup.string().trim().required(),
+    password: Yup.string().trim().required(),
+});
+
+export { UserSchemaDB, LoginBodySchema };

@@ -1,6 +1,7 @@
 import { v4 } from 'uuid';
 import { di } from '../../utils/di.js';
 import { entityByPredicate } from '../../utils/common.js';
+import { ResponseError } from '../../utils/response.js';
 
 const PriorityService = di.record(di.key()('db'), (db) => {
     const getById = async (id) => {
@@ -35,7 +36,7 @@ const PriorityService = di.record(di.key()('db'), (db) => {
     const updatePriority = async (id, callback) => {
         const [priority, index] = getById(id);
 
-        if (index === -1) throw new Error('No priority was found by id', id);
+        if (index === -1) throw new ResponseError('No priority was found by id', id);
 
         const updated = { ...priority, ...callback(priority) };
         db.data.priorities[index] = updated;
@@ -46,7 +47,7 @@ const PriorityService = di.record(di.key()('db'), (db) => {
 
     const deletePriority = async (id) => {
         const [priority, index] = await getById(id);
-        if (!priority) throw new Error('No priority was found by id', id);
+        if (!priority) throw new ResponseError('No priority was found by id', id);
 
         db.data.priorities.splice(index, 1);
         db.update();

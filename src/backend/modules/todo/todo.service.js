@@ -4,6 +4,7 @@ import { CommentService } from '../comment/comment.service.js';
 import { LabelService } from '../label/label.service.js';
 import { PriorityService } from '../priority/priority.service.js';
 import { entityByPredicate } from '../../utils/common.js';
+import { ResponseError } from '../../utils/response.js';
 
 const TodoService = di.record(
     di.key()('db'),
@@ -75,7 +76,7 @@ const TodoService = di.record(
         const deleteTodo = async (id) => {
             const [todo, index] = await getById(id);
 
-            if (!todo) throw new Error('No todo was found by id', id);
+            if (!todo) throw new ResponseError('No todo was found by id', id);
 
             todo.commentIds.forEach((commentId) => {
                 CommentService.deleteComment(commentId);

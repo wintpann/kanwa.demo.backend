@@ -1,6 +1,7 @@
 import { v4 } from 'uuid';
 import { di } from '../../utils/di.js';
 import { entityByPredicate } from '../../utils/common.js';
+import { ResponseError } from '../../utils/response.js';
 
 const CommentService = di.record(di.key()('db'), (db) => {
     const getById = async (id) => {
@@ -30,7 +31,7 @@ const CommentService = di.record(di.key()('db'), (db) => {
 
     const deleteComment = async (id) => {
         const [comment, index] = await getById(id);
-        if (!comment) throw new Error('No comment was found by id', id);
+        if (!comment) throw new ResponseError('No comment was found by id', id);
 
         db.data.comments.splice(index, 1);
         db.update();
