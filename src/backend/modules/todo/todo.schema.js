@@ -6,9 +6,9 @@ const TodoSchemaDB = Yup.object().shape({
     title: Yup.string().trim().required(),
     description: Yup.string(),
     checked: Yup.boolean().required(),
-    comments: Yup.array().of(Yup.string().trim().required()),
-    labels: Yup.array().of(Yup.string().trim().required()),
-    priority: Yup.string(),
+    commentIds: Yup.array().of(Yup.string().trim().required()),
+    labelIds: Yup.array().of(Yup.string().trim().required()),
+    priorityId: Yup.string(),
     dueDate: Yup.date().nullable(),
 });
 
