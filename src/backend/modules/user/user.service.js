@@ -23,6 +23,10 @@ const UserService = di.record(di.key()('db'), (db) => {
     };
 
     const createUser = async (userData) => {
+        const [sameUser] = await getBy({ login: userData.login });
+
+        if (sameUser) throw new ResponseError('User with this login already exists');
+
         const password = await bcrypt.hash(userData.password, 12);
 
         const user = {
@@ -33,7 +37,7 @@ const UserService = di.record(di.key()('db'), (db) => {
             todoIds: [],
         };
 
-        db.data.push(user);
+        db.data.users.push(user);
         db.update();
 
         return user;

@@ -5,8 +5,8 @@ import { UserController } from './user.controller.js';
 const UserRouter = di.record(UserController, (UserController) => {
     const Router = ExpressRouter();
 
-    Router.route('/user/login').get(UserController.login);
-    Router.route('/user/signup').get(UserController.signup);
+    Router.route('/user/login').post(UserController.login);
+    Router.route('/user/signup').post(UserController.signup);
 
     return Router;
 });
