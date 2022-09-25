@@ -31,7 +31,7 @@ const CommentService = di.record(di.key()('db'), (db) => {
 
     const deleteComment = async (id) => {
         const [comment, index] = await getById(id);
-        if (!comment) throw new ResponseError('No comment was found');
+        if (!comment) throw new ResponseError({ notifyMessage: 'No comment was found' });
 
         db.data.comments.splice(index, 1);
         db.update();

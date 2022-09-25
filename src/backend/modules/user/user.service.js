@@ -29,7 +29,8 @@ const UserService = di.record(di.key()('db'), (db) => {
     const createUser = async (userData) => {
         const [sameUser] = await getBy({ login: userData.login });
 
-        if (sameUser) throw new ResponseError('User with this login already exists');
+        if (sameUser)
+            throw new ResponseError({ notifyMessage: 'User with this login already exists' });
 
         const password = await bcrypt.hash(userData.password, 12);
 
@@ -52,7 +53,7 @@ const UserService = di.record(di.key()('db'), (db) => {
     const updateUser = async (userLike, callback) => {
         const [user, index] = await getBy(userLike);
 
-        if (index === -1) throw new ResponseError('No user was found');
+        if (index === -1) throw new ResponseError({ notifyMessage: 'No user was found' });
 
         const updated = { ...user, ...callback(user) };
         db.data.users[index] = updated;
@@ -65,33 +66,43 @@ const UserService = di.record(di.key()('db'), (db) => {
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
         if (!isPasswordCorrect) {
-            throw new ResponseError('Incorrect password');
+            throw new ResponseError({ notifyMessage: 'Incorrect password' });
         }
     };
 
     const auth = async (req) => {
         const authorization = await AuthHeaderSchema.validate(req.headers.authorization, {
             strict: true,
-        }).catch(mapToResponseError(RESPONSE.AUTH_REQUIRED));
+        }).catch(mapToResponseError({ response: RESPONSE.AUTH_REQUIRED }));
 
         const payload = jwt.decode(authorization, process.env.JWT_SECRET);
 
         if (!payload) {
-            throw new ResponseError('AuthorizationTokenInvalid', RESPONSE.AUTH_REQUIRED);
+            throw new ResponseError({
+                response: RESPONSE.AUTH_REQUIRED,
+                message: 'AuthorizationTokenInvalid',
+            });
         }
 
         try {
             jwt.verify(authorization, process.env.JWT_SECRET);
         } catch (e) {
             if (e instanceof jwt.TokenExpiredError) {
-                throw new ResponseError('AuthorizationTokenExpired', RESPONSE.AUTH_REQUIRED);
+                throw new ResponseError({
+                    message: 'AuthorizationTokenExpired',
+                    response: RESPONSE.AUTH_REQUIRED,
+                });
             } else {
-                throw new ResponseError('AuthorizationTokenInvalid', RESPONSE.AUTH_REQUIRED);
+                throw new ResponseError({
+                    message: 'AuthorizationTokenInvalid',
+                    response: RESPONSE.AUTH_REQUIRED,
+                });
             }
         }
 
         const [user] = await getBy({ id: payload.userId });
-        if (!user) throw new ResponseError('NoUserFound', RESPONSE.AUTH_REQUIRED);
+        if (!user)
+            throw new ResponseError({ message: 'NoUserFound', response: RESPONSE.AUTH_REQUIRED });
 
         return user;
     };
@@ -99,10 +110,12 @@ const UserService = di.record(di.key()('db'), (db) => {
     const refresh = async (req) => {
         const refreshToken = await RefreshHeaderSchema.validate(req.headers.refresh, {
             strict: true,
-        }).catch(mapToResponseError(RESPONSE.AUTH_REQUIRED));
+        }).catch(mapToResponseError({ response: RESPONSE.AUTH_REQUIRED }));
 
         const [user] = await getBy({ refreshToken });
-        if (!user) throw new ResponseError('NoUserFound', RESPONSE.AUTH_REQUIRED);
+        if (!user) {
+            throw new ResponseError({ message: 'NoUserFound', response: RESPONSE.AUTH_REQUIRED });
+        }
 
         const { accessToken, refreshToken: newRefreshToken } = createTokens(user);
         await updateUser(user, (user) => ({ ...user, refreshToken: newRefreshToken }));

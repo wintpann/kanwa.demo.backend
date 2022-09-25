@@ -9,11 +9,11 @@ const TodoController = di.record(TodoService, UserService, (TodoService, UserSer
         const user = await UserService.auth(req);
 
         const todoData = await CreateTodoSchema.validate(req.body, { strict: true }).catch(
-            mapToResponseError(RESPONSE.BAD_NOTIFY, 'Could not create todo, invalid data'),
+            mapToResponseError({ notifyMessage: 'Could not create todo, invalid data' }),
         );
         const todo = await TodoService.createTodo({ ...todoData, userId: user.id });
 
-        respond(res, RESPONSE.OK, todo);
+        respond({ res, data: todo });
     }),
 }));
 
