@@ -10,6 +10,8 @@ const SettingsService = di.record(
         createPriority: PriorityService.createPriority,
         updateLabel: LabelService.updateLabel,
         updatePriority: PriorityService.updatePriority,
+        deleteLabel: LabelService.deleteLabel,
+        deletePriority: PriorityService.deletePriority,
     }),
 );
 

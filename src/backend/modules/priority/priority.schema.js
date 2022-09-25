@@ -5,7 +5,6 @@ const PrioritySchemaDB = Yup.object().shape({
     userId: Yup.string().trim().required(),
     color: Yup.string().trim().required(),
     title: Yup.string().trim().required(),
-    active: Yup.boolean().required(),
 });
 
 export { PrioritySchemaDB };

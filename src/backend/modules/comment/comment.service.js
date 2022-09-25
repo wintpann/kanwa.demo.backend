@@ -1,9 +1,10 @@
 import { v4 } from 'uuid';
 import { di } from '../../utils/di.js';
+import { entityByPredicate } from '../../utils/common.js';
 
 const CommentService = di.record(di.key()('db'), (db) => {
     const getById = async (id) => {
-        return db.data.comments.find((comment) => comment.id === id);
+        return entityByPredicate(db.data.comments, (comment) => comment.id === id);
     };
 
     const getUserComments = async (userId) => {
@@ -28,9 +29,10 @@ const CommentService = di.record(di.key()('db'), (db) => {
     };
 
     const deleteComment = async (id) => {
-        const commentIndex = db.data.comments.findIndex((comment) => comment.id === id);
-        db.data.comments.splice(commentIndex, 1);
+        const [comment, index] = await getById(id);
+        if (!comment) throw new Error('No comment was found by id', id);
 
+        db.data.comments.splice(index, 1);
         await db.write();
     };
 

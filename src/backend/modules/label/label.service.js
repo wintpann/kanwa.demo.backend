@@ -1,17 +1,14 @@
 import { v4 } from 'uuid';
 import { di } from '../../utils/di.js';
+import { entityByPredicate } from '../../utils/common.js';
 
 const LabelService = di.record(di.key()('db'), (db) => {
     const getById = async (id) => {
-        return db.data.labels.find((label) => label.id === id);
+        return entityByPredicate(db.data.labels, (label) => label.id === id);
     };
 
-    const getUserLabels = async (userId, active) => {
-        return db.data.labels.filter((label) => {
-            const sameId = label.userId === userId;
-            const sameActive = active !== undefined ? true : label.active === active;
-            return sameId && sameActive;
-        });
+    const getUserLabels = async (userId) => {
+        return db.data.labels.filter((label) => label.userId === userId);
     };
 
     const getTodoLabels = async (todoId) => {
@@ -32,16 +29,23 @@ const LabelService = di.record(di.key()('db'), (db) => {
     };
 
     const updateLabel = async (id, callback) => {
-        const labelIndex = db.data.labels.findIndex((label) => label.id === id);
+        const [label, index] = await getById(id);
 
-        if (labelIndex === -1) throw new Error('No label was found by id', id);
+        if (index === -1) throw new Error('No label was found by id', id);
 
-        const label = db.data.labels[labelIndex];
         const updated = { ...label, ...callback(label) };
-        db.data.labels[labelIndex] = updated;
+        db.data.labels[index] = updated;
 
         await db.write();
         return updated;
+    };
+
+    const deleteLabel = async (id) => {
+        const [label, index] = await getById(id);
+        if (!label) throw new Error('No label was found by id', id);
+
+        db.data.labels.splice(index, 1);
+        await db.write();
     };
 
     return {
@@ -50,6 +54,7 @@ const LabelService = di.record(di.key()('db'), (db) => {
         getTodoLabels,
         createLabel,
         updateLabel,
+        deleteLabel,
     };
 });
 
