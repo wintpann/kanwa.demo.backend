@@ -36,7 +36,7 @@ const PriorityService = di.record(di.key()('db'), (db) => {
     const updatePriority = async (id, callback) => {
         const [priority, index] = getById(id);
 
-        if (index === -1) throw new ResponseError('No priority was found by id', id);
+        if (index === -1) throw new ResponseError('No priority was found');
 
         const updated = { ...priority, ...callback(priority) };
         db.data.priorities[index] = updated;
@@ -47,7 +47,7 @@ const PriorityService = di.record(di.key()('db'), (db) => {
 
     const deletePriority = async (id) => {
         const [priority, index] = await getById(id);
-        if (!priority) throw new ResponseError('No priority was found by id', id);
+        if (!priority) throw new ResponseError('No priority was found');
 
         db.data.priorities.splice(index, 1);
         db.update();

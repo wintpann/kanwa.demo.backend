@@ -15,10 +15,7 @@ const LoginBodySchema = Yup.object().shape({
     password: Yup.string().trim().required(),
 });
 
-const SignupBodySchema = Yup.object().shape({
-    login: Yup.string().trim().required(),
-    password: Yup.string().trim().required(),
-});
+const SignupBodySchema = LoginBodySchema;
 
 const AuthHeaderSchema = Yup.string().trim().required();
 

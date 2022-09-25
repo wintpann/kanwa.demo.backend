@@ -32,7 +32,7 @@ const LabelService = di.record(di.key()('db'), (db) => {
     const updateLabel = async (id, callback) => {
         const [label, index] = await getById(id);
 
-        if (index === -1) throw new ResponseError('No label was found by id', id);
+        if (index === -1) throw new ResponseError('No label was found');
 
         const updated = { ...label, ...callback(label) };
         db.data.labels[index] = updated;
@@ -43,7 +43,7 @@ const LabelService = di.record(di.key()('db'), (db) => {
 
     const deleteLabel = async (id) => {
         const [label, index] = await getById(id);
-        if (!label) throw new ResponseError('No label was found by id', id);
+        if (!label) throw new ResponseError('No label was found');
 
         db.data.labels.splice(index, 1);
         db.update();

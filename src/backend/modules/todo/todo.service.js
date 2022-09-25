@@ -76,7 +76,7 @@ const TodoService = di.record(
         const deleteTodo = async (id) => {
             const [todo, index] = await getById(id);
 
-            if (!todo) throw new ResponseError('No todo was found by id', id);
+            if (!todo) throw new ResponseError('No todo was found');
 
             todo.commentIds.forEach((commentId) => {
                 CommentService.deleteComment(commentId);
