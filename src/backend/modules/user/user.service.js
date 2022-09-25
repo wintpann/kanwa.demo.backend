@@ -35,6 +35,8 @@ const UserService = di.record(di.key()('db'), (db) => {
             password,
             refreshToken: '',
             todoIds: [],
+            labelIds: [],
+            priorityIds: [],
         };
 
         db.data.users.push(user);

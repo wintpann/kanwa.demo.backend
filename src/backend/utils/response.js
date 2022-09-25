@@ -1,23 +1,41 @@
-const RESPONSE_CODE = {
-    OK: 200,
-    BAD_REQUEST: 400,
-    UNKNOWN_ERROR: 500,
-    NOT_AUTHORIZED: 401,
+const RESPONSE = {
+    OK: 'OK',
+    OK_NOTIFY: 'OK_NOTIFY',
+    BAD: 'BAD',
+    BAD_NOTIFY: 'BAD_NOTIFY',
 };
 
-const CODE_TO_STATUS = {
-    [RESPONSE_CODE.OK]: 'info',
-    [RESPONSE_CODE.BAD_REQUEST]: 'error',
-    [RESPONSE_CODE.UNKNOWN_ERROR]: 'unknown',
-    [RESPONSE_CODE.NOT_AUTHORIZED]: 'auth',
+const RESPONSE_TO_CODE = {
+    [RESPONSE.OK]: 200,
+    [RESPONSE.OK_NOTIFY]: 200,
+    [RESPONSE.BAD]: 400,
+    [RESPONSE.BAD_NOTIFY]: 400,
 };
 
-const respond = (res, code, data, message) => {
-    const response = { data };
+const RESPONSE_TO_KIND = {
+    [RESPONSE.OK]: 'success',
+    [RESPONSE.OK_NOTIFY]: 'success',
+    [RESPONSE.BAD]: 'error',
+    [RESPONSE.BAD_NOTIFY]: 'error',
+};
+
+const RESPONSE_TO_NOTIFY = {
+    [RESPONSE.OK]: false,
+    [RESPONSE.OK_NOTIFY]: true,
+    [RESPONSE.BAD]: false,
+    [RESPONSE.BAD_NOTIFY]: true,
+};
+
+const respond = (res, response, data, message = '') => {
+    const result = { data };
     if (message) {
-        response.status = { code: CODE_TO_STATUS[code], message };
+        result.status = {
+            kind: RESPONSE_TO_KIND[response],
+            message,
+            shouldNotify: RESPONSE_TO_NOTIFY[response],
+        };
     }
-    res.status(code).json(response);
+    res.status(RESPONSE_TO_CODE[response]).json(result);
 };
 
 const createController = (callback) => async (req, res) => {
@@ -25,9 +43,9 @@ const createController = (callback) => async (req, res) => {
         await callback(req, res);
     } catch (e) {
         if (e instanceof ResponseError) {
-            respond(res, RESPONSE_CODE.BAD_REQUEST, null, e.responseMessage);
+            respond(res, RESPONSE.BAD_NOTIFY, null, e.responseMessage);
         } else {
-            respond(res, RESPONSE_CODE.UNKNOWN_ERROR, null, e.message);
+            respond(res, RESPONSE.BAD, null, e.message);
         }
     }
 };
@@ -43,4 +61,4 @@ const mapToResponseError = (message) => () => {
     throw new ResponseError(message);
 };
 
-export { respond, RESPONSE_CODE, ResponseError, createController, mapToResponseError };
+export { respond, RESPONSE, ResponseError, createController, mapToResponseError };

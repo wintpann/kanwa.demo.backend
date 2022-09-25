@@ -6,6 +6,8 @@ const UserSchemaDB = Yup.object().shape({
     password: Yup.string().trim().required(),
     refreshToken: Yup.string(),
     todoIds: Yup.array().of(Yup.string().trim().required()),
+    labelIds: Yup.array().of(Yup.string().trim().required()),
+    priorityIds: Yup.array().of(Yup.string().trim().required()),
 });
 
 const LoginBodySchema = Yup.object().shape({

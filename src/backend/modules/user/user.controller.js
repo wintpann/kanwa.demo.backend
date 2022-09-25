@@ -5,7 +5,7 @@ import {
     createController,
     mapToResponseError,
     respond,
-    RESPONSE_CODE,
+    RESPONSE,
     ResponseError,
 } from '../../utils/response.js';
 import { cleanupUser } from './user.util.js';
@@ -26,7 +26,7 @@ const UserController = di.record(UserService, (UserService) => ({
         const { accessToken, refreshToken } = UserService.createTokens(user);
         await UserService.updateUser(user, (user) => ({ ...user, refreshToken }));
 
-        respond(res, RESPONSE_CODE.OK, {
+        respond(res, RESPONSE.OK, {
             user: cleanupUser(user),
             accessToken,
             refreshToken,
@@ -41,7 +41,7 @@ const UserController = di.record(UserService, (UserService) => ({
         const { accessToken, refreshToken } = UserService.createTokens(user);
         await UserService.updateUser(user, (user) => ({ ...user, refreshToken }));
 
-        respond(res, RESPONSE_CODE.OK, {
+        respond(res, RESPONSE.OK, {
             user: cleanupUser(user),
             accessToken,
             refreshToken,
