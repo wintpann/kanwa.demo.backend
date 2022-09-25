@@ -62,9 +62,9 @@ class ResponseError extends Error {
 }
 
 const mapToResponseError =
-    (message, response = RESPONSE.BAD_NOTIFY) =>
-    () => {
-        throw new ResponseError(message, response);
+    (response = RESPONSE.BAD_NOTIFY, message) =>
+    (e) => {
+        throw new ResponseError(message ?? e.message, response);
     };
 
 export { respond, RESPONSE, ResponseError, createController, mapToResponseError };

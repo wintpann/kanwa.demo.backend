@@ -12,4 +12,12 @@ const TodoSchemaDB = Yup.object().shape({
     dueDateISO: Yup.date().nullable(),
 });
 
-export { TodoSchemaDB };
+const CreateTodoSchema = Yup.object().shape({
+    title: Yup.string().trim().required(),
+    description: Yup.string().trim(),
+    labelIds: Yup.array().of(Yup.string().trim().required()),
+    priorityId: Yup.string().trim(),
+    dueDateISO: Yup.date(),
+});
+
+export { TodoSchemaDB, CreateTodoSchema };

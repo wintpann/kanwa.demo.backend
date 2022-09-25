@@ -70,9 +70,9 @@ const UserService = di.record(di.key()('db'), (db) => {
     };
 
     const auth = async (req) => {
-        const authorization = await AuthHeaderSchema.validate(req.headers.authorization).catch(
-            mapToResponseError('AuthorizationTokenNotProvided', RESPONSE.AUTH_REQUIRED),
-        );
+        const authorization = await AuthHeaderSchema.validate(req.headers.authorization, {
+            strict: true,
+        }).catch(mapToResponseError(RESPONSE.AUTH_REQUIRED));
 
         const payload = jwt.decode(authorization, process.env.JWT_SECRET);
 
@@ -97,9 +97,9 @@ const UserService = di.record(di.key()('db'), (db) => {
     };
 
     const refresh = async (req) => {
-        const refreshToken = await RefreshHeaderSchema.validate(req.headers.refresh).catch(
-            mapToResponseError('RefreshTokenNotProvided', RESPONSE.AUTH_REQUIRED),
-        );
+        const refreshToken = await RefreshHeaderSchema.validate(req.headers.refresh, {
+            strict: true,
+        }).catch(mapToResponseError(RESPONSE.AUTH_REQUIRED));
 
         const [user] = await getBy({ refreshToken });
         if (!user) throw new ResponseError('NoUserFound', RESPONSE.AUTH_REQUIRED);

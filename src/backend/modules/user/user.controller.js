@@ -12,9 +12,9 @@ import { cleanupUser } from './user.util.js';
 
 const UserController = di.record(UserService, (UserService) => ({
     login: createController(async (req, res) => {
-        const { login, password } = await LoginBodySchema.validate(req.body.user).catch(
-            mapToResponseError('Login and password is required'),
-        );
+        const { login, password } = await LoginBodySchema.validate(req.body, {
+            strict: true,
+        }).catch(mapToResponseError(RESPONSE.BAD_NOTIFY, 'Could not login, invalid credentials'));
 
         const [user] = await UserService.getBy({ login });
 
@@ -33,9 +33,9 @@ const UserController = di.record(UserService, (UserService) => ({
         });
     }),
     signup: createController(async (req, res) => {
-        const { login, password } = await SignupBodySchema.validate(req.body.user).catch(
-            mapToResponseError('Login and password is required'),
-        );
+        const { login, password } = await SignupBodySchema.validate(req.body, {
+            strict: true,
+        }).catch(mapToResponseError(RESPONSE.BAD_NOTIFY, 'Could not signup, invalid credentials'));
 
         const user = await UserService.createUser({ login, password });
         const { accessToken, refreshToken } = UserService.createTokens(user);
@@ -59,9 +59,7 @@ const UserController = di.record(UserService, (UserService) => ({
     me: createController(async (req, res) => {
         const user = await UserService.auth(req);
 
-        respond(res, RESPONSE.OK, {
-            user: cleanupUser(user),
-        });
+        respond(res, RESPONSE.OK, cleanupUser(user));
     }),
 }));
 

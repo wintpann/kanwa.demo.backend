@@ -17,8 +17,10 @@ const LoginBodySchema = Yup.object().shape({
 
 const SignupBodySchema = LoginBodySchema;
 
-const AuthHeaderSchema = Yup.string().trim().required();
+const AuthHeaderSchema = Yup.string('Authorization header should be a string')
+    .trim()
+    .required('Authorization header not provided');
 
-const RefreshHeaderSchema = Yup.string().trim().required();
+const RefreshHeaderSchema = AuthHeaderSchema;
 
 export { UserSchemaDB, LoginBodySchema, SignupBodySchema, AuthHeaderSchema, RefreshHeaderSchema };
