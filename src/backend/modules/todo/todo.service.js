@@ -36,7 +36,7 @@ const TodoService = di.record(
                 title: todo.title,
                 description: todo.description,
                 checked: todo.checked,
-                dueDate: todo.dueDate,
+                dueDateISO: todo.dueDateISO,
                 comments,
                 labels,
                 priority,
@@ -48,7 +48,7 @@ const TodoService = di.record(
             description,
             labelIds = [],
             priorityId,
-            dueDate,
+            dueDateISO,
             userId,
         }) => {
             const todo = {
@@ -60,7 +60,7 @@ const TodoService = di.record(
                 commentIds: [],
                 labelIds,
                 priorityId,
-                dueDate,
+                dueDateISO,
             };
 
             db.data.todos.push(todo);
