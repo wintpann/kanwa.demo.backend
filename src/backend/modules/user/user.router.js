@@ -7,6 +7,7 @@ const UserRouter = di.record(UserController, (UserController) => {
 
     Router.route('/user/login').post(UserController.login);
     Router.route('/user/signup').post(UserController.signup);
+    Router.route('/user/me').get(UserController.me);
 
     return Router;
 });

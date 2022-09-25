@@ -3,7 +3,8 @@ import bcrypt from 'bcryptjs';
 import { v4 as uuid } from 'uuid';
 import { di } from '../../utils/di.js';
 import { entityByPredicate } from '../../utils/common.js';
-import { ResponseError } from '../../utils/response.js';
+import { mapToResponseError, RESPONSE, ResponseError } from '../../utils/response.js';
+import { AuthHeaderSchema } from './user.schema.js';
 
 const UserService = di.record(di.key()('db'), (db) => {
     const createTokens = (user) => {
@@ -65,12 +66,41 @@ const UserService = di.record(di.key()('db'), (db) => {
         }
     };
 
+    const auth = async (req) => {
+        const authorization = await AuthHeaderSchema.validate(req.headers.authorization).catch(
+            mapToResponseError('AuthorizationTokenNotProvided', RESPONSE.AUTH_REQUIRED),
+        );
+
+        const payload = jwt.decode(authorization, process.env.JWT_SECRET);
+
+        if (!payload) {
+            throw new ResponseError('AuthorizationTokenInvalid', RESPONSE.AUTH_REQUIRED);
+        }
+
+        try {
+            jwt.verify(authorization, process.env.JWT_SECRET);
+        } catch (e) {
+            console.log(e);
+            if (e instanceof jwt.TokenExpiredError) {
+                throw new ResponseError('AuthorizationTokenExpired', RESPONSE.AUTH_REQUIRED);
+            } else {
+                throw new ResponseError('AuthorizationTokenInvalid', RESPONSE.AUTH_REQUIRED);
+            }
+        }
+
+        const [user] = await getBy({ id: payload.userId });
+        if (!user) throw new ResponseError('NoUserFound', RESPONSE.AUTH_REQUIRED);
+
+        return user;
+    };
+
     return {
         createTokens,
         getBy,
         updateUser,
         createUser,
         validatePassword,
+        auth,
     };
 });
 
