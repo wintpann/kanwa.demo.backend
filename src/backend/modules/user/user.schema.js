@@ -22,4 +22,6 @@ const SignupBodySchema = Yup.object().shape({
 
 const AuthHeaderSchema = Yup.string().trim().required();
 
-export { UserSchemaDB, LoginBodySchema, SignupBodySchema, AuthHeaderSchema };
+const RefreshHeaderSchema = Yup.string().trim().required();
+
+export { UserSchemaDB, LoginBodySchema, SignupBodySchema, AuthHeaderSchema, RefreshHeaderSchema };

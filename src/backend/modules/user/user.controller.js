@@ -47,6 +47,15 @@ const UserController = di.record(UserService, (UserService) => ({
             refreshToken,
         });
     }),
+    refresh: createController(async (req, res) => {
+        const { user, accessToken, refreshToken } = await UserService.refresh(req);
+
+        respond(res, RESPONSE.OK, {
+            user: cleanupUser(user),
+            accessToken,
+            refreshToken,
+        });
+    }),
     me: createController(async (req, res) => {
         const user = await UserService.auth(req);
 

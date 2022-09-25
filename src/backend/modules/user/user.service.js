@@ -4,7 +4,7 @@ import { v4 as uuid } from 'uuid';
 import { di } from '../../utils/di.js';
 import { entityByPredicate } from '../../utils/common.js';
 import { mapToResponseError, RESPONSE, ResponseError } from '../../utils/response.js';
-import { AuthHeaderSchema } from './user.schema.js';
+import { AuthHeaderSchema, RefreshHeaderSchema } from './user.schema.js';
 
 const UserService = di.record(di.key()('db'), (db) => {
     const createTokens = (user) => {
@@ -19,7 +19,10 @@ const UserService = di.record(di.key()('db'), (db) => {
     const getBy = async (userLike) => {
         return entityByPredicate(
             db.data.users,
-            (user) => user.id === userLike.id || user.login === userLike.login,
+            (user) =>
+                user.id === userLike.id ||
+                user.login === userLike.login ||
+                user.refreshToken === userLike.refreshToken,
         );
     };
 
@@ -94,6 +97,20 @@ const UserService = di.record(di.key()('db'), (db) => {
         return user;
     };
 
+    const refresh = async (req) => {
+        const refreshToken = await RefreshHeaderSchema.validate(req.headers.refresh).catch(
+            mapToResponseError('RefreshTokenNotProvided', RESPONSE.AUTH_REQUIRED),
+        );
+
+        const [user] = await getBy({ refreshToken });
+        if (!user) throw new ResponseError('NoUserFound', RESPONSE.AUTH_REQUIRED);
+
+        const { accessToken, refreshToken: newRefreshToken } = createTokens(user);
+        await updateUser(user, (user) => ({ ...user, refreshToken: newRefreshToken }));
+
+        return { user, accessToken, refreshToken: newRefreshToken };
+    };
+
     return {
         createTokens,
         getBy,
@@ -101,6 +118,7 @@ const UserService = di.record(di.key()('db'), (db) => {
         createUser,
         validatePassword,
         auth,
+        refresh,
     };
 });
 
