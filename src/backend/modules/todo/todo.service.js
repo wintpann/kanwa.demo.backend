@@ -3,7 +3,7 @@ import { di } from '../../utils/di.js';
 import { CommentService } from '../comment/comment.service.js';
 import { LabelService } from '../label/label.service.js';
 import { PriorityService } from '../priority/priority.service.js';
-import { entityByPredicate } from '../../utils/common.js';
+import { findByPredicate } from '../../utils/common.js';
 import { ResponseError } from '../../utils/response.js';
 
 const TodoService = di.record(
@@ -70,13 +70,13 @@ const TodoService = di.record(
         };
 
         const getById = async (id) => {
-            return entityByPredicate(db.todos, (todo) => todo.id === id);
+            return findByPredicate(db.todos, (todo) => todo.id === id);
         };
 
         const deleteTodo = async (id) => {
             const [todo, index] = await getById(id);
 
-            if (!todo) throw new ResponseError({ notifyMessage: 'No todo was found' });
+            if (!todo) throw new ResponseError({ notifyMessage: 'No todo was found to delete' });
 
             todo.commentIds.forEach((commentId) => {
                 CommentService.deleteComment(commentId);

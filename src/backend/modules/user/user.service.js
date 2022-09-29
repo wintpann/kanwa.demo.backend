@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { v4 as uuid } from 'uuid';
 import { di } from '../../utils/di.js';
-import { entityByPredicate } from '../../utils/common.js';
+import { findByPredicate } from '../../utils/common.js';
 import { mapToResponseError, RESPONSE, ResponseError } from '../../utils/response.js';
 import { AuthHeaderSchema, RefreshHeaderSchema } from './user.schema.js';
 
@@ -17,7 +17,7 @@ const UserService = di.record(di.key()('db'), (db) => {
     };
 
     const getBy = async (userLike) => {
-        return entityByPredicate(
+        return findByPredicate(
             db.data.users,
             (user) =>
                 user.id === userLike.id ||

@@ -1,11 +1,11 @@
 import { v4 } from 'uuid';
 import { di } from '../../utils/di.js';
-import { entityByPredicate } from '../../utils/common.js';
+import { findByPredicate } from '../../utils/common.js';
 import { ResponseError } from '../../utils/response.js';
 
 const LabelService = di.record(di.key()('db'), (db) => {
     const getById = async (id) => {
-        return entityByPredicate(db.data.labels, (label) => label.id === id);
+        return findByPredicate(db.data.labels, (label) => label.id === id);
     };
 
     const getUserLabels = async (userId) => {
@@ -32,7 +32,8 @@ const LabelService = di.record(di.key()('db'), (db) => {
     const updateLabel = async (id, callback) => {
         const [label, index] = await getById(id);
 
-        if (index === -1) throw new ResponseError({ notifyMessage: 'No label was found' });
+        if (index === -1)
+            throw new ResponseError({ notifyMessage: 'No label was found to update' });
 
         const updated = { ...label, ...callback(label) };
         db.data.labels[index] = updated;
@@ -43,7 +44,7 @@ const LabelService = di.record(di.key()('db'), (db) => {
 
     const deleteLabel = async (id) => {
         const [label, index] = await getById(id);
-        if (!label) throw new ResponseError({ notifyMessage: 'No label was found' });
+        if (!label) throw new ResponseError({ notifyMessage: 'No label was found to delete' });
 
         db.data.labels.splice(index, 1);
         db.update();
