@@ -9,7 +9,7 @@ const TodoSchemaDB = Yup.object().shape({
     commentIds: Yup.array().of(Yup.string().trim().required()),
     labelIds: Yup.array().of(Yup.string().trim().required()),
     priorityId: Yup.string(),
-    dueDateISO: Yup.date().nullable(),
+    dueDateISO: Yup.date(),
 });
 
 const CreateTodoSchema = Yup.object().shape({

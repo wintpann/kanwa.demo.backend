@@ -79,11 +79,9 @@ const TodoService = di.record(
                 throw new Error('No todo was found by id', id);
             }
 
-            todo.commentIds.forEach((commentId) => {
-                CommentService.deleteComment(commentId);
-            });
             db.data.todos.splice(index, 1);
             db.update();
+            return todo;
         };
 
         return {
