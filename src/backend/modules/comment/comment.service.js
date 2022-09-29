@@ -16,7 +16,7 @@ const CommentService = di.record(di.key()('db'), (db) => {
         return db.data.comments.filter((comment) => comment.todoId === todoId);
     };
 
-    const createComment = async (content, todoId, userId) => {
+    const createComment = async ({ content, todoId, userId }) => {
         const comment = {
             content,
             todoId,
@@ -29,12 +29,15 @@ const CommentService = di.record(di.key()('db'), (db) => {
         return comment;
     };
 
-    const deleteComment = async (id) => {
+    const deleteComment = async (id, userId) => {
         const [comment, index] = await getById(id);
-        if (!comment) throw new ResponseError({ notifyMessage: 'No comment was found to delete' });
+        if (!comment || comment.userId !== userId) {
+            throw new ResponseError({ notifyMessage: 'No comment was found to delete' });
+        }
 
         db.data.comments.splice(index, 1);
         db.update();
+        return comment;
     };
 
     return {

@@ -21,5 +21,6 @@ const Routers = createRouters({ db });
 app.use('/api', Routers.PingPongRouter);
 app.use('/api', Routers.UserRouter);
 app.use('/api', Routers.TodoRouter);
+app.use('/api', Routers.CommentRouter);
 
 app.listen(process.env.PORT, () => console.log('BACKEND IS RUNNING ON PORT', process.env.PORT));

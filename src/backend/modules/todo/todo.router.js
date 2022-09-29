@@ -5,7 +5,7 @@ import { TodoController } from './todo.controller.js';
 const TodoRouter = di.record(TodoController, (TodoController) => {
     const Router = ExpressRouter();
 
-    Router.route('/todo').post(TodoController.createTodo);
+    Router.route('/todos').post(TodoController.createTodo);
 
     return Router;
 });
