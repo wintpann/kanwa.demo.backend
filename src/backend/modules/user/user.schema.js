@@ -11,15 +11,13 @@ const UserSchemaDB = Yup.object().shape({
 });
 
 const LoginBodySchema = Yup.object().shape({
-    login: Yup.string('login should be a string').trim().required('login is required'),
-    password: Yup.string('password should be a string').trim().required('password is required'),
+    login: Yup.string().trim().required(),
+    password: Yup.string().trim().required(),
 });
 
 const SignupBodySchema = LoginBodySchema;
 
-const AuthHeaderSchema = Yup.string('Authorization header should be a string')
-    .trim()
-    .required('Authorization header not provided');
+const AuthHeaderSchema = Yup.string().trim().required();
 
 const RefreshHeaderSchema = AuthHeaderSchema;
 

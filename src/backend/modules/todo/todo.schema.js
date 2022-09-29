@@ -13,13 +13,11 @@ const TodoSchemaDB = Yup.object().shape({
 });
 
 const CreateTodoSchema = Yup.object().shape({
-    title: Yup.string('title should be a string').trim().required('title is required'),
-    description: Yup.string('description should be a string').trim(),
-    labelIds: Yup.array('labelIds should be an array').of(
-        Yup.string('label id should be a string').trim().required('label id should not be empty'),
-    ),
-    priorityId: Yup.string('priorityId should be a string').trim(),
-    dueDateISO: Yup.date('dueDateISO should be a Date ISO string'),
+    title: Yup.string().trim().required(),
+    description: Yup.string().trim(),
+    labelIds: Yup.array().of(Yup.string().trim().required()),
+    priorityId: Yup.string().trim(),
+    dueDateISO: Yup.date(),
 });
 
 export { TodoSchemaDB, CreateTodoSchema };
