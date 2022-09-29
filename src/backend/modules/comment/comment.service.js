@@ -1,7 +1,6 @@
 import { v4 } from 'uuid';
 import { di } from '../../utils/di.js';
 import { findByPredicate } from '../../utils/common.js';
-import { ResponseError } from '../../utils/response.js';
 
 const CommentService = di.record(di.key()('db'), (db) => {
     const getById = async (id) => {
@@ -32,7 +31,7 @@ const CommentService = di.record(di.key()('db'), (db) => {
     const deleteComment = async (id, userId) => {
         const [comment, index] = await getById(id);
         if (!comment || comment.userId !== userId) {
-            throw new ResponseError({ notifyMessage: 'No comment was found to delete' });
+            throw new Error('No comment was found by id', id);
         }
 
         db.data.comments.splice(index, 1);

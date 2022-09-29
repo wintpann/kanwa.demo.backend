@@ -29,8 +29,9 @@ const UserService = di.record(di.key()('db'), (db) => {
     const createUser = async (userData) => {
         const [sameUser] = await getBy({ login: userData.login });
 
-        if (sameUser)
+        if (sameUser) {
             throw new ResponseError({ notifyMessage: 'User with this login already exists' });
+        }
 
         const password = await bcrypt.hash(userData.password, 12);
 
@@ -53,7 +54,9 @@ const UserService = di.record(di.key()('db'), (db) => {
     const updateUser = async (userLike, callback) => {
         const [user, index] = await getBy(userLike);
 
-        if (index === -1) throw new ResponseError({ notifyMessage: 'No user was found' });
+        if (!user) {
+            throw new ResponseError({ notifyMessage: 'No user was found' });
+        }
 
         const updated = { ...user, ...callback(user) };
         db.data.users[index] = updated;

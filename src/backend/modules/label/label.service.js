@@ -1,7 +1,6 @@
 import { v4 } from 'uuid';
 import { di } from '../../utils/di.js';
 import { findByPredicate } from '../../utils/common.js';
-import { ResponseError } from '../../utils/response.js';
 
 const LabelService = di.record(di.key()('db'), (db) => {
     const getById = async (id) => {
@@ -32,8 +31,9 @@ const LabelService = di.record(di.key()('db'), (db) => {
     const updateLabel = async (id, callback) => {
         const [label, index] = await getById(id);
 
-        if (index === -1)
-            throw new ResponseError({ notifyMessage: 'No label was found to update' });
+        if (!label) {
+            throw new Error('No label was found by id', id);
+        }
 
         const updated = { ...label, ...callback(label) };
         db.data.labels[index] = updated;
@@ -44,7 +44,9 @@ const LabelService = di.record(di.key()('db'), (db) => {
 
     const deleteLabel = async (id) => {
         const [label, index] = await getById(id);
-        if (!label) throw new ResponseError({ notifyMessage: 'No label was found to delete' });
+        if (!label) {
+            throw new Error('No label was found by id', id);
+        }
 
         db.data.labels.splice(index, 1);
         db.update();
