@@ -6,7 +6,9 @@ const LabelRouter = di.record(LabelController, (LabelController) => {
     const Router = ExpressRouter();
 
     Router.route('/labels').post(LabelController.createLabel);
-    Router.route('/labels/:id').put(LabelController.updateLabel);
+    Router.route('/labels/:id')
+        .put(LabelController.updateLabel)
+        .delete(LabelController.deleteLabel);
 
     return Router;
 });

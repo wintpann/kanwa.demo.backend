@@ -63,6 +63,9 @@ const TodoService = di.record(
                 dueDateISO,
             };
 
+            await LabelService.ensureLabelsExist(userId, todo.labelIds);
+            await PriorityService.ensurePriorityExists(userId, todo.priorityId);
+
             db.data.todos.push(todo);
             db.update();
 
@@ -74,6 +77,32 @@ const TodoService = di.record(
             if (!todo) {
                 throw new Error('No todo was found by id', id);
             }
+        };
+
+        const getUserTodos = async (userId) => {
+            return db.data.todos.filter((todo) => todo.userId === userId);
+        };
+
+        const unlinkLabel = async (userId, labelId) => {
+            const userTodos = await getUserTodos(userId);
+
+            userTodos.forEach((todo) => {
+                const set = new Set(todo.labelIds);
+                set.delete(labelId);
+                todo.labelIds = Array.from(set);
+            });
+            db.update();
+        };
+
+        const unlinkPriority = async (userId, priorityId) => {
+            const userTodos = await getUserTodos(userId);
+
+            userTodos.forEach((todo) => {
+                if (todo.priorityId === priorityId) {
+                    todo.priorityId = null;
+                }
+            });
+            db.update();
         };
 
         const linkCommentTodo = async (userId, todoId, commentId) => {
@@ -133,6 +162,8 @@ const TodoService = di.record(
             linkCommentTodo,
             unlinkCommentTodo,
             updateTodo,
+            unlinkLabel,
+            unlinkPriority,
         };
     },
 );

@@ -18,4 +18,14 @@ const UpdateLabelSchemaQuery = Yup.object().shape({
     id: Yup.string().trim().required(),
 });
 
-export { LabelSchemaDB, CreateLabelSchemaBody, UpdateLabelSchemaBody, UpdateLabelSchemaQuery };
+const DeleteLabelSchemaQuery = Yup.object().shape({
+    id: Yup.string().trim().required(),
+});
+
+export {
+    LabelSchemaDB,
+    CreateLabelSchemaBody,
+    UpdateLabelSchemaBody,
+    UpdateLabelSchemaQuery,
+    DeleteLabelSchemaQuery,
+};
