@@ -20,7 +20,6 @@ const LabelService = di.record(di.key()('db'), (db) => {
             title,
             userId,
             id: v4(),
-            active: true,
         };
         db.data.labels.push(label);
 

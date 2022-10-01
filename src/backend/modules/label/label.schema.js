@@ -6,4 +6,8 @@ const LabelSchemaDB = Yup.object().shape({
     title: Yup.string().trim().required(),
 });
 
-export { LabelSchemaDB };
+const CreateLabelSchemaBody = Yup.object().shape({
+    title: Yup.string().trim().required(),
+});
+
+export { LabelSchemaDB, CreateLabelSchemaBody };

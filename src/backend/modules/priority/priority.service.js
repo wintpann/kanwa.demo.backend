@@ -19,14 +19,21 @@ const PriorityService = di.record(di.key()('db'), (db) => {
         return priority;
     };
 
-    const createPriority = async (title, color, userId) => {
+    const createPriority = async ({ title, color, userId, order }) => {
         const priority = {
             title,
             color,
             userId,
             id: v4(),
-            active: true,
+            order,
         };
+
+        if (!priority.order) {
+            const userPriorities = await getUserPriorities(userId);
+            const maxOrder = Math.max(...userPriorities.map(({ order }) => order), 0);
+            priority.order = maxOrder + 1;
+        }
+
         db.data.priorities.push(priority);
         db.update();
         return priority;
