@@ -68,6 +68,16 @@ const LabelController = di.record(
             await TodoService.unlinkLabel(user.id, id);
             respond({ res });
         }),
+        getLabels: createController(async (req, res) => {
+            const user = await UserService.auth(req);
+
+            const labels = await LabelService.getUserLabels(user.id);
+            const data = labels
+                .map(LabelService.respondWith)
+                .sort((a, b) => a.title.localeCompare(b.title));
+
+            respond({ res, data });
+        }),
     }),
 );
 

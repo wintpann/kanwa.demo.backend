@@ -86,6 +86,16 @@ const PriorityController = di.record(
             await TodoService.unlinkPriority(user.id, id);
             respond({ res });
         }),
+        getPriorities: createController(async (req, res) => {
+            const user = await UserService.auth(req);
+
+            const priorities = await PriorityService.getUserPriorities(user.id);
+            const data = priorities
+                .map(PriorityService.respondWith)
+                .sort((a, b) => a.title.localeCompare(b.title));
+
+            respond({ res, data });
+        }),
     }),
 );
 
