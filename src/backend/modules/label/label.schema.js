@@ -10,4 +10,12 @@ const CreateLabelSchemaBody = Yup.object().shape({
     title: Yup.string().trim().required(),
 });
 
-export { LabelSchemaDB, CreateLabelSchemaBody };
+const UpdateLabelSchemaBody = Yup.object().shape({
+    title: Yup.string().trim().required(),
+});
+
+const UpdateLabelSchemaQuery = Yup.object().shape({
+    id: Yup.string().trim().required(),
+});
+
+export { LabelSchemaDB, CreateLabelSchemaBody, UpdateLabelSchemaBody, UpdateLabelSchemaQuery };

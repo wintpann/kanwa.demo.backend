@@ -27,10 +27,17 @@ const LabelService = di.record(di.key()('db'), (db) => {
         return label;
     };
 
-    const updateLabel = async (id, callback) => {
+    const isTitleUnique = async (userId, title) => {
+        const userLabels = await getUserLabels(userId);
+        const hasSameLabel = userLabels.some((label) => label.title === title);
+
+        return !hasSameLabel;
+    };
+
+    const updateLabel = async (userId, id, callback) => {
         const [label, index] = await getById(id);
 
-        if (!label) {
+        if (!label || label.userId !== userId) {
             throw new Error('No label was found by id', id);
         }
 
@@ -41,9 +48,10 @@ const LabelService = di.record(di.key()('db'), (db) => {
         return updated;
     };
 
-    const deleteLabel = async (id) => {
+    const deleteLabel = async (userId, id) => {
         const [label, index] = await getById(id);
-        if (!label) {
+
+        if (!label || label.userId !== userId) {
             throw new Error('No label was found by id', id);
         }
 
@@ -69,6 +77,7 @@ const LabelService = di.record(di.key()('db'), (db) => {
         updateLabel,
         deleteLabel,
         ensureLabelsExist,
+        isTitleUnique,
     };
 });
 
