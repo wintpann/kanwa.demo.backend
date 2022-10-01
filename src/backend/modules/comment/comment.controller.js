@@ -20,7 +20,7 @@ const CommentController = di.record(
             const comment = await CommentService.createComment({ ...commentData, userId: user.id });
             await TodoService.linkCommentTodo(user.id, comment.todoId, comment.id);
 
-            respond({ res, data: comment });
+            respond({ res, data: CommentService.respondWith(comment) });
         }),
         deleteComment: createController(async (req, res) => {
             const user = await UserService.auth(req);

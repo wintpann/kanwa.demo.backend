@@ -5,6 +5,7 @@ import { di } from '../../utils/di.js';
 import { findByPredicate } from '../../utils/common.js';
 import { mapToResponseError, RESPONSE, ResponseError } from '../../utils/response.js';
 import { AuthSchemaHeader, RefreshSchemaHeader } from './user.schema.js';
+import omit from 'lodash/omit.js';
 
 const UserService = di.record(di.key()('db'), (db) => {
     const createTokens = (user) => {
@@ -126,6 +127,8 @@ const UserService = di.record(di.key()('db'), (db) => {
         return { user, accessToken, refreshToken: newRefreshToken };
     };
 
+    const respondWith = (user) => omit(user, ['id', 'login']);
+
     return {
         createTokens,
         getBy,
@@ -134,6 +137,7 @@ const UserService = di.record(di.key()('db'), (db) => {
         validatePassword,
         auth,
         refresh,
+        respondWith,
     };
 });
 

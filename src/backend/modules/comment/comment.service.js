@@ -1,5 +1,6 @@
 import { v4 } from 'uuid';
 import { di } from '../../utils/di.js';
+import omit from 'lodash/omit.js';
 import { findByPredicate } from '../../utils/common.js';
 
 const CommentService = di.record(di.key()('db'), (db) => {
@@ -62,6 +63,8 @@ const CommentService = di.record(di.key()('db'), (db) => {
         }
     };
 
+    const respondWith = (comment) => omit(comment, ['userId']);
+
     return {
         getById,
         getUserComments,
@@ -70,6 +73,7 @@ const CommentService = di.record(di.key()('db'), (db) => {
         deleteComment,
         deleteComments,
         ensureCommentsExist,
+        respondWith,
     };
 });
 

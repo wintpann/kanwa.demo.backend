@@ -33,7 +33,7 @@ const LabelController = di.record(
             }
 
             const label = await LabelService.createLabel(title, user.id);
-            respond({ res, data: label });
+            respond({ res, data: LabelService.respondWith(label) });
         }),
         updateLabel: createController(async (req, res) => {
             const user = await UserService.auth(req);
@@ -55,7 +55,7 @@ const LabelController = di.record(
                 ...label,
                 title,
             }));
-            respond({ res, data: label });
+            respond({ res, data: LabelService.respondWith(label) });
         }),
         deleteLabel: createController(async (req, res) => {
             const user = await UserService.auth(req);

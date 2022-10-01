@@ -11,18 +11,18 @@ const TodoService = di.record(
     LabelService,
     PriorityService,
     (db, CommentService, LabelService, PriorityService) => {
-        const populate = async (todo) => {
+        const respondWith = async (todo) => {
             const comments = await Promise.all(
                 todo.commentIds.map(async (commentId) => {
                     const [comment] = await CommentService.getById(commentId);
-                    return comment;
+                    return CommentService.respondWith(comment);
                 }),
             );
 
             const labels = await Promise.all(
                 todo.labelIds.map(async (labelId) => {
                     const [label] = await LabelService.getById(labelId);
-                    return label;
+                    return LabelService.respondWith(label);
                 }),
             );
 
@@ -39,7 +39,7 @@ const TodoService = di.record(
                 dueDateISO: todo.dueDateISO,
                 comments,
                 labels,
-                priority,
+                priority: PriorityService.respondWith(priority),
             };
         };
 
@@ -69,7 +69,7 @@ const TodoService = di.record(
             db.data.todos.push(todo);
             db.update();
 
-            return await populate(todo);
+            return todo;
         };
 
         const ensureTodoExists = async (id) => {
@@ -134,7 +134,7 @@ const TodoService = di.record(
             db.data.todos[index] = updated;
             db.update();
 
-            return await populate(updated);
+            return updated;
         };
 
         const getById = async (id) => {
@@ -158,7 +158,7 @@ const TodoService = di.record(
             deleteTodo,
             getById,
             ensureTodoExists,
-            populate,
+            respondWith,
             linkCommentTodo,
             unlinkCommentTodo,
             updateTodo,

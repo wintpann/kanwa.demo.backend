@@ -24,7 +24,7 @@ const TodoController = di.record(
             );
             const todo = await TodoService.createTodo({ ...todoData, userId: user.id });
 
-            respond({ res, data: todo });
+            respond({ res, data: TodoService.respondWith(todo) });
         }),
         updateTodo: createController(async (req, res) => {
             const user = await UserService.auth(req);
@@ -41,7 +41,7 @@ const TodoController = di.record(
                 ...cleanObject(todoData),
             }));
 
-            respond({ res, data: updated });
+            respond({ res, data: TodoService.respondWith(updated) });
         }),
         deleteTodo: createController(async (req, res) => {
             const user = await UserService.auth(req);

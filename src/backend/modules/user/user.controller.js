@@ -7,7 +7,6 @@ import {
     respond,
     ResponseError,
 } from '../../utils/response.js';
-import { cleanupUser } from './user.util.js';
 
 const UserController = di.record(UserService, (UserService) => ({
     login: createController(async (req, res) => {
@@ -28,7 +27,7 @@ const UserController = di.record(UserService, (UserService) => ({
         respond({
             res,
             data: {
-                user: cleanupUser(user),
+                user: UserService.respondWith(user),
                 accessToken,
                 refreshToken,
             },
@@ -46,7 +45,7 @@ const UserController = di.record(UserService, (UserService) => ({
         respond({
             res,
             data: {
-                user: cleanupUser(user),
+                user: UserService.respondWith(user),
                 accessToken,
                 refreshToken,
             },
@@ -58,7 +57,7 @@ const UserController = di.record(UserService, (UserService) => ({
         respond({
             res,
             data: {
-                user: cleanupUser(user),
+                user: UserService.respondWith(user),
                 accessToken,
                 refreshToken,
             },
@@ -67,7 +66,7 @@ const UserController = di.record(UserService, (UserService) => ({
     me: createController(async (req, res) => {
         const user = await UserService.auth(req);
 
-        respond({ res, data: cleanupUser(user) });
+        respond({ res, data: UserService.respondWith(user) });
     }),
 }));
 

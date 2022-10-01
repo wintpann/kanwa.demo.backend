@@ -1,6 +1,7 @@
 import { v4 } from 'uuid';
 import { di } from '../../utils/di.js';
 import { findByPredicate } from '../../utils/common.js';
+import omit from 'lodash/omit.js';
 
 const PriorityService = di.record(di.key()('db'), (db) => {
     const getById = async (id) => {
@@ -75,6 +76,8 @@ const PriorityService = di.record(di.key()('db'), (db) => {
         }
     };
 
+    const respondWith = (priority) => omit(priority, ['userId']);
+
     return {
         getById,
         getUserPriorities,
@@ -84,6 +87,7 @@ const PriorityService = di.record(di.key()('db'), (db) => {
         deletePriority,
         ensurePriorityExists,
         isTitleUnique,
+        respondWith,
     };
 });
 

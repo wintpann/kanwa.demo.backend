@@ -41,7 +41,7 @@ const PriorityController = di.record(
                 color,
                 userId: user.id,
             });
-            respond({ res, data: priority });
+            respond({ res, data: PriorityService.respondWith(priority) });
         }),
         updatePriority: createController(async (req, res) => {
             const user = await UserService.auth(req);
@@ -72,7 +72,7 @@ const PriorityController = di.record(
                 }),
             }));
 
-            respond({ res, data: priority });
+            respond({ res, data: PriorityService.respondWith(priority) });
         }),
         deletePriority: createController(async (req, res) => {
             const user = await UserService.auth(req);
