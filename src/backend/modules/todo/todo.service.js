@@ -181,6 +181,16 @@ const TodoService = di.record(
             return findByPredicate(db.data.todos, (todo) => todo.id === id);
         };
 
+        const getUserTodo = async (userId, id) => {
+            const [todo] = await getById(id);
+
+            if (!todo || todo.userId !== userId) {
+                throw new Error('No todo was found by id', id);
+            }
+
+            return todo;
+        };
+
         const deleteTodo = async (userId, id) => {
             const [todo, index] = await getById(id);
 
@@ -205,6 +215,7 @@ const TodoService = di.record(
             unlinkLabel,
             unlinkPriority,
             getUserTodosFiltered,
+            getUserTodo,
         };
     },
 );

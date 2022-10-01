@@ -79,6 +79,17 @@ const TodoController = di.record(
 
             respond({ res, data });
         }),
+        getTodo: createController(async (req, res) => {
+            const user = await UserService.auth(req);
+
+            const { id } = await GetTodosSchemaQuery.validate(req.params).catch(
+                mapToResponseError({ message: 'Id was not provided' }),
+            );
+            const todo = await TodoService.getUserTodo(user.id, id);
+            const data = await TodoService.respondWith(todo);
+
+            respond({ res, data });
+        }),
     }),
 );
 

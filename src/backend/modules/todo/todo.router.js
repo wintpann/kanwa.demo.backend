@@ -7,7 +7,10 @@ const TodoRouter = di.record(TodoController, (TodoController) => {
 
     Router.route('/todos').post(TodoController.createTodo);
     Router.route('/todos').get(TodoController.getTodos);
-    Router.route('/todos/:id').put(TodoController.updateTodo).delete(TodoController.deleteTodo);
+    Router.route('/todos/:id')
+        .put(TodoController.updateTodo)
+        .delete(TodoController.deleteTodo)
+        .get(TodoController.getTodo);
 
     return Router;
 });

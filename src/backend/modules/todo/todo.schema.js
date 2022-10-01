@@ -37,6 +37,10 @@ const DeleteTodoSchemaQuery = Yup.object().shape({
     id: Yup.string().trim().required(),
 });
 
+const GetTodoSchemaQuery = Yup.object().shape({
+    id: Yup.string().trim().required(),
+});
+
 const GetTodosSchemaQuery = Yup.object().shape({
     checked: Yup.boolean(),
     labelIds: Yup.array().of(Yup.string().trim().required()),
