@@ -37,10 +37,19 @@ const DeleteTodoSchemaQuery = Yup.object().shape({
     id: Yup.string().trim().required(),
 });
 
+const GetTodosSchemaQuery = Yup.object().shape({
+    checked: Yup.boolean(),
+    labelIds: Yup.array().of(Yup.string().trim().required()),
+    priorityIds: Yup.array().of(Yup.string().trim().required()),
+    fromDueDate: Yup.date().nullable(),
+    toDueDate: Yup.date().nullable(),
+});
+
 export {
     TodoSchemaDB,
     CreateTodoSchemaBody,
     UpdateTodoSchemaBody,
     UpdateTodoSchemaQuery,
     DeleteTodoSchemaQuery,
+    GetTodosSchemaQuery,
 };

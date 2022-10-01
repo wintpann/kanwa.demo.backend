@@ -5,6 +5,7 @@ import { CommentService } from '../comment/comment.service.js';
 import {
     CreateTodoSchemaBody,
     DeleteTodoSchemaQuery,
+    GetTodosSchemaQuery,
     UpdateTodoSchemaBody,
     UpdateTodoSchemaQuery,
 } from './todo.schema.js';
@@ -23,8 +24,9 @@ const TodoController = di.record(
                 mapToResponseError({ notifyMessage: 'Could not create todo, invalid data' }),
             );
             const todo = await TodoService.createTodo({ ...todoData, userId: user.id });
+            const data = await TodoService.respondWith(todo);
 
-            respond({ res, data: TodoService.respondWith(todo) });
+            respond({ res, data });
         }),
         updateTodo: createController(async (req, res) => {
             const user = await UserService.auth(req);
@@ -40,8 +42,9 @@ const TodoController = di.record(
                 ...todo,
                 ...cleanObject(todoData),
             }));
+            const data = await TodoService.respondWith(updated);
 
-            respond({ res, data: TodoService.respondWith(updated) });
+            respond({ res, data });
         }),
         deleteTodo: createController(async (req, res) => {
             const user = await UserService.auth(req);
@@ -53,6 +56,28 @@ const TodoController = di.record(
             await CommentService.deleteComments(user.id, todo.commentIds);
 
             respond({ res });
+        }),
+        getTodos: createController(async (req, res) => {
+            const user = await UserService.auth(req);
+
+            const { checked, labelIds, priorityIds, fromDueDate, toDueDate } =
+                await GetTodosSchemaQuery.validate(req.query).catch(
+                    mapToResponseError({
+                        notifyMessage: 'Could not find todos, invalid search params',
+                    }),
+                );
+
+            const todos = await TodoService.getUserTodosFiltered({
+                userId: user.id,
+                checked,
+                labelIds,
+                priorityIds,
+                fromDueDate,
+                toDueDate,
+            });
+            const data = await Promise.all(todos.map(TodoService.respondWith));
+
+            respond({ res, data });
         }),
     }),
 );

@@ -1,4 +1,5 @@
 import { v4 } from 'uuid';
+import intersection from 'lodash/intersection.js';
 import { di } from '../../utils/di.js';
 import { CommentService } from '../comment/comment.service.js';
 import { LabelService } from '../label/label.service.js';
@@ -83,6 +84,45 @@ const TodoService = di.record(
             return db.data.todos.filter((todo) => todo.userId === userId);
         };
 
+        const getUserTodosFiltered = async ({
+            userId,
+            checked,
+            labelIds = [],
+            priorityIds = [],
+            fromDueDate,
+            toDueDate,
+        }) => {
+            const userTodos = await getUserTodos(userId);
+
+            const filtered = userTodos.filter((todo) => {
+                const satisfiesChecked = checked != null ? todo.checked === checked : true;
+                const satisfiesLabel = labelIds.length
+                    ? Boolean(intersection(todo.labelIds, labelIds).length)
+                    : true;
+                const satisfiesPriority = priorityIds.length
+                    ? priorityIds.includes(todo.priorityId)
+                    : true;
+                const satisfiesFromDueDate = fromDueDate
+                    ? Date.parse(todo.dueDateISO) >= Date.parse(fromDueDate)
+                    : true;
+                const satisfiesToDueDate = toDueDate
+                    ? Date.parse(todo.dueDateISO) <= Date.parse(toDueDate)
+                    : true;
+
+                return (
+                    satisfiesChecked &&
+                    satisfiesLabel &&
+                    satisfiesPriority &&
+                    satisfiesFromDueDate &&
+                    satisfiesToDueDate
+                );
+            });
+
+            filtered.sort((a, b) => Date.parse(a.dueDateISO) - Date.parse(b.dueDateISO));
+
+            return filtered;
+        };
+
         const unlinkLabel = async (userId, labelId) => {
             const userTodos = await getUserTodos(userId);
 
@@ -164,6 +204,7 @@ const TodoService = di.record(
             updateTodo,
             unlinkLabel,
             unlinkPriority,
+            getUserTodosFiltered,
         };
     },
 );
