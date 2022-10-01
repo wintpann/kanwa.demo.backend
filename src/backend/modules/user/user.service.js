@@ -4,7 +4,7 @@ import { v4 as uuid } from 'uuid';
 import { di } from '../../utils/di.js';
 import { findByPredicate } from '../../utils/common.js';
 import { mapToResponseError, RESPONSE, ResponseError } from '../../utils/response.js';
-import { AuthHeaderSchema, RefreshHeaderSchema } from './user.schema.js';
+import { AuthSchemaHeader, RefreshSchemaHeader } from './user.schema.js';
 
 const UserService = di.record(di.key()('db'), (db) => {
     const createTokens = (user) => {
@@ -74,9 +74,9 @@ const UserService = di.record(di.key()('db'), (db) => {
     };
 
     const auth = async (req) => {
-        const authorization = await AuthHeaderSchema.validate(req.headers.authorization, {
-            strict: true,
-        }).catch(mapToResponseError({ response: RESPONSE.AUTH_REQUIRED }));
+        const authorization = await AuthSchemaHeader.validate(req.headers.authorization).catch(
+            mapToResponseError({ response: RESPONSE.AUTH_REQUIRED }),
+        );
 
         const payload = jwt.decode(authorization, process.env.JWT_SECRET);
 
@@ -111,9 +111,9 @@ const UserService = di.record(di.key()('db'), (db) => {
     };
 
     const refresh = async (req) => {
-        const refreshToken = await RefreshHeaderSchema.validate(req.headers.refresh, {
-            strict: true,
-        }).catch(mapToResponseError({ response: RESPONSE.AUTH_REQUIRED }));
+        const refreshToken = await RefreshSchemaHeader.validate(req.headers.refresh).catch(
+            mapToResponseError({ response: RESPONSE.AUTH_REQUIRED }),
+        );
 
         const [user] = await getBy({ refreshToken });
         if (!user) {

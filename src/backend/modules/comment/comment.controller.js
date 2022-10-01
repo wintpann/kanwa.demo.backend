@@ -2,31 +2,38 @@ import { di } from '../../utils/di.js';
 import { UserService } from '../user/user.service.js';
 import { createController, mapToResponseError, respond } from '../../utils/response.js';
 import { CommentService } from './comment.service.js';
-import { CreateCommentSchema, DeleteCommentSchema } from './comment.schema.js';
+import { CreateCommentSchemaBody, DeleteCommentSchemaQuery } from './comment.schema.js';
+import { TodoService } from '../todo/todo.service.js';
 
-const CommentController = di.record(UserService, CommentService, (UserService, CommentService) => ({
-    createComment: createController(async (req, res) => {
-        const user = await UserService.auth(req);
+const CommentController = di.record(
+    UserService,
+    CommentService,
+    TodoService,
+    (UserService, CommentService, TodoService) => ({
+        createComment: createController(async (req, res) => {
+            const user = await UserService.auth(req);
 
-        const commentData = await CreateCommentSchema.validate(req.body, { strict: true }).catch(
-            mapToResponseError({ notifyMessage: 'Could not create comment, invalid data' }),
-        );
-        const comment = await CommentService.createComment({ ...commentData, userId: user.id });
+            const commentData = await CreateCommentSchemaBody.validate(req.body).catch(
+                mapToResponseError({ notifyMessage: 'Could not create comment, invalid data' }),
+            );
+            await TodoService.ensureTodoExists(commentData.todoId);
+            const comment = await CommentService.createComment({ ...commentData, userId: user.id });
+            await TodoService.linkCommentTodo(user.id, comment.todoId, comment.id);
 
-        respond({ res, data: comment });
-        // TODO TodoService.linkCommentTodo(comment.todoId, comment.id)
+            respond({ res, data: comment });
+        }),
+        deleteComment: createController(async (req, res) => {
+            const user = await UserService.auth(req);
+
+            const { id } = await DeleteCommentSchemaQuery.validate(req.params).catch(
+                mapToResponseError({ notifyMessage: 'Could not delete comment, invalid data' }),
+            );
+            const comment = await CommentService.deleteComment(user.id, id);
+            await TodoService.unlinkCommentTodo(user.id, comment.todoId, comment.id);
+
+            respond({ res });
+        }),
     }),
-    deleteComment: createController(async (req, res) => {
-        const user = await UserService.auth(req);
-
-        const commentId = await DeleteCommentSchema.validate(req.query, { strict: true }).catch(
-            mapToResponseError({ notifyMessage: 'Could not delete comment, invalid data' }),
-        );
-        const comment = await CommentService.deleteComment(commentId, user.id);
-
-        respond({ res, data: comment });
-        // TODO TodoService.unlinkCommentTodo(comment.todoId, comment.id)
-    }),
-}));
+);
 
 export { CommentController };

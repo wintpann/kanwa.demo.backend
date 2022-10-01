@@ -56,6 +56,17 @@ const PriorityService = di.record(di.key()('db'), (db) => {
         db.update();
     };
 
+    const ensurePriorityExists = async (userId, priorityId) => {
+        if (!priorityId) return;
+
+        const userPriorities = await getUserPriorities(userId);
+        const priorityExists = userPriorities.some(({ id }) => id === priorityId);
+
+        if (!priorityExists) {
+            throw new Error('Provided priority does not exist');
+        }
+    };
+
     return {
         getById,
         getUserPriorities,
@@ -63,6 +74,7 @@ const PriorityService = di.record(di.key()('db'), (db) => {
         createPriority,
         updatePriority,
         deletePriority,
+        ensurePriorityExists,
     };
 });
 

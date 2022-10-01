@@ -6,6 +6,7 @@ const TodoRouter = di.record(TodoController, (TodoController) => {
     const Router = ExpressRouter();
 
     Router.route('/todos').post(TodoController.createTodo);
+    Router.route('/todos/:id').put(TodoController.updateTodo).delete(TodoController.deleteTodo);
 
     return Router;
 });

@@ -4,21 +4,24 @@ const UserSchemaDB = Yup.object().shape({
     id: Yup.string().trim().required(),
     login: Yup.string().trim().required(),
     password: Yup.string().trim().required(),
-    refreshToken: Yup.string(),
+    refreshToken: Yup.string().nullable(),
     todoIds: Yup.array().of(Yup.string().trim().required()),
     labelIds: Yup.array().of(Yup.string().trim().required()),
     priorityIds: Yup.array().of(Yup.string().trim().required()),
 });
 
-const LoginBodySchema = Yup.object().shape({
+const LoginSchemaBody = Yup.object().shape({
     login: Yup.string().trim().required(),
     password: Yup.string().trim().required(),
 });
 
-const SignupBodySchema = LoginBodySchema;
+const SignupSchemaBody = Yup.object().shape({
+    login: Yup.string().trim().required(),
+    password: Yup.string().trim().required(),
+});
 
-const AuthHeaderSchema = Yup.string().trim().required();
+const AuthSchemaHeader = Yup.string().trim().required();
 
-const RefreshHeaderSchema = AuthHeaderSchema;
+const RefreshSchemaHeader = Yup.string().trim().required();
 
-export { UserSchemaDB, LoginBodySchema, SignupBodySchema, AuthHeaderSchema, RefreshHeaderSchema };
+export { UserSchemaDB, LoginSchemaBody, SignupSchemaBody, AuthSchemaHeader, RefreshSchemaHeader };

@@ -16,7 +16,7 @@ const RESPONSE_TO_KIND = {
     [RESPONSE.AUTH_REQUIRED]: 'auth_required',
 };
 
-const respond = ({ res, message, notifyMessage, data, response = RESPONSE.OK }) => {
+const respond = ({ res, message, notifyMessage, data = null, response = RESPONSE.OK }) => {
     res.status(RESPONSE_TO_CODE[response]).json({
         data,
         status: {

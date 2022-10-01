@@ -4,20 +4,43 @@ const TodoSchemaDB = Yup.object().shape({
     id: Yup.string().trim().required(),
     userId: Yup.string().trim().required(),
     title: Yup.string().trim().required(),
-    description: Yup.string(),
+    description: Yup.string().nullable(),
     checked: Yup.boolean().required(),
     commentIds: Yup.array().of(Yup.string().trim().required()),
     labelIds: Yup.array().of(Yup.string().trim().required()),
-    priorityId: Yup.string(),
-    dueDateISO: Yup.date(),
+    priorityId: Yup.string().nullable(),
+    dueDateISO: Yup.date().nullable(),
 });
 
-const CreateTodoSchema = Yup.object().shape({
+const CreateTodoSchemaBody = Yup.object().shape({
     title: Yup.string().trim().required(),
-    description: Yup.string().trim(),
+    description: Yup.string().trim().nullable(),
     labelIds: Yup.array().of(Yup.string().trim().required()),
-    priorityId: Yup.string().trim(),
-    dueDateISO: Yup.date(),
+    priorityId: Yup.string().trim().nullable(),
+    dueDateISO: Yup.date().nullable(),
 });
 
-export { TodoSchemaDB, CreateTodoSchema };
+const UpdateTodoSchemaBody = Yup.object().shape({
+    title: Yup.string().trim().min(1),
+    description: Yup.string().trim().min(1),
+    checked: Yup.boolean(),
+    labelIds: Yup.array().of(Yup.string().trim().required()),
+    priorityId: Yup.string().trim().nullable(),
+    dueDateISO: Yup.date().nullable(),
+});
+
+const UpdateTodoSchemaQuery = Yup.object().shape({
+    id: Yup.string().trim().required(),
+});
+
+const DeleteTodoSchemaQuery = Yup.object().shape({
+    id: Yup.string().trim().required(),
+});
+
+export {
+    TodoSchemaDB,
+    CreateTodoSchemaBody,
+    UpdateTodoSchemaBody,
+    UpdateTodoSchemaQuery,
+    DeleteTodoSchemaQuery,
+};

@@ -9,7 +9,8 @@ const TodoService = di.record(
     di.key()('db'),
     CommentService,
     LabelService,
-    (db, CommentService, LabelService) => {
+    PriorityService,
+    (db, CommentService, LabelService, PriorityService) => {
         const populate = async (todo) => {
             const comments = await Promise.all(
                 todo.commentIds.map(async (commentId) => {
@@ -46,8 +47,8 @@ const TodoService = di.record(
             title,
             description,
             labelIds = [],
-            priorityId,
-            dueDateISO,
+            priorityId = null,
+            dueDateISO = null,
             userId,
         }) => {
             const todo = {
@@ -65,17 +66,56 @@ const TodoService = di.record(
             db.data.todos.push(todo);
             db.update();
 
-            return populate(todo);
+            return await populate(todo);
+        };
+
+        const ensureTodoExists = async (id) => {
+            const [todo] = await getById(id);
+            if (!todo) {
+                throw new Error('No todo was found by id', id);
+            }
+        };
+
+        const linkCommentTodo = async (userId, todoId, commentId) => {
+            await updateTodo(userId, todoId, (todo) => ({
+                ...todo,
+                commentIds: [...todo.commentIds, commentId],
+            }));
+        };
+
+        const unlinkCommentTodo = async (userId, todoId, commentId) => {
+            await updateTodo(userId, todoId, (todo) => ({
+                ...todo,
+                commentIds: todo.commentIds.filter((id) => id !== commentId),
+            }));
+        };
+
+        const updateTodo = async (userId, id, callback) => {
+            const [todo, index] = await getById(id);
+            if (!todo || todo.userId !== userId) {
+                throw new Error('No todo was found by id', id);
+            }
+
+            const updated = { ...todo, ...callback(todo) };
+
+            await LabelService.ensureLabelsExist(userId, updated.labelIds);
+            await PriorityService.ensurePriorityExists(userId, updated.priorityId);
+            await CommentService.ensureCommentsExist(userId, updated.commentIds);
+
+            db.data.todos[index] = updated;
+            db.update();
+
+            return await populate(updated);
         };
 
         const getById = async (id) => {
-            return findByPredicate(db.todos, (todo) => todo.id === id);
+            return findByPredicate(db.data.todos, (todo) => todo.id === id);
         };
 
-        const deleteTodo = async (id) => {
+        const deleteTodo = async (userId, id) => {
             const [todo, index] = await getById(id);
 
-            if (!todo) {
+            if (!todo || todo.userId !== userId) {
                 throw new Error('No todo was found by id', id);
             }
 
@@ -88,7 +128,11 @@ const TodoService = di.record(
             createTodo,
             deleteTodo,
             getById,
+            ensureTodoExists,
             populate,
+            linkCommentTodo,
+            unlinkCommentTodo,
+            updateTodo,
         };
     },
 );

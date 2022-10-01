@@ -1,5 +1,7 @@
 import _omit from 'lodash/omit.js';
 import _pick from 'lodash/pick.js';
+import _isNil from 'lodash/isNil.js';
+import _omitBy from 'lodash/omitBy.js';
 
 const omit =
     (...keys) =>
@@ -18,4 +20,6 @@ const findByPredicate = (array, predicate) => {
     return [array[index], index];
 };
 
-export { omit, pick, findByPredicate };
+const cleanObject = (obj) => _omitBy(obj, _isNil);
+
+export { omit, pick, findByPredicate, cleanObject };

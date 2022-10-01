@@ -10,7 +10,7 @@ const initLowDB = async () => {
 
     try {
         await db.read();
-        await DBSchema.validate(db.data, { strict: true });
+        db.data = await DBSchema.validate(db.data);
     } catch (e) {
         db.data = DB_INITIAL;
     }

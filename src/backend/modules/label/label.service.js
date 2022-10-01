@@ -52,6 +52,16 @@ const LabelService = di.record(di.key()('db'), (db) => {
         db.update();
     };
 
+    const ensureLabelsExist = async (userId, labelIds) => {
+        const userLabels = await getUserLabels(userId);
+        const userLabelsSet = new Set(userLabels.map(({ id }) => id));
+
+        const allLabelsExist = labelIds.every((id) => userLabelsSet.has(id));
+        if (!allLabelsExist) {
+            throw new Error('Not all provided labels exist');
+        }
+    };
+
     return {
         getById,
         getUserLabels,
@@ -59,6 +69,7 @@ const LabelService = di.record(di.key()('db'), (db) => {
         createLabel,
         updateLabel,
         deleteLabel,
+        ensureLabelsExist,
     };
 });
 

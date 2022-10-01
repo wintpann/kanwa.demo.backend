@@ -1,6 +1,6 @@
 import { di } from '../../utils/di.js';
 import { UserService } from './user.service.js';
-import { LoginBodySchema, SignupBodySchema } from './user.schema.js';
+import { LoginSchemaBody, SignupSchemaBody } from './user.schema.js';
 import {
     createController,
     mapToResponseError,
@@ -11,9 +11,9 @@ import { cleanupUser } from './user.util.js';
 
 const UserController = di.record(UserService, (UserService) => ({
     login: createController(async (req, res) => {
-        const { login, password } = await LoginBodySchema.validate(req.body, {
-            strict: true,
-        }).catch(mapToResponseError({ notifyMessage: 'Could not login, invalid credentials' }));
+        const { login, password } = await LoginSchemaBody.validate(req.body).catch(
+            mapToResponseError({ notifyMessage: 'Could not login, invalid credentials' }),
+        );
 
         const [user] = await UserService.getBy({ login });
 
@@ -35,9 +35,9 @@ const UserController = di.record(UserService, (UserService) => ({
         });
     }),
     signup: createController(async (req, res) => {
-        const { login, password } = await SignupBodySchema.validate(req.body, {
-            strict: true,
-        }).catch(mapToResponseError({ notifyMessage: 'Could not signup, invalid credentials' }));
+        const { login, password } = await SignupSchemaBody.validate(req.body).catch(
+            mapToResponseError({ notifyMessage: 'Could not signup, invalid credentials' }),
+        );
 
         const user = await UserService.createUser({ login, password });
         const { accessToken, refreshToken } = UserService.createTokens(user);

@@ -28,7 +28,7 @@ const CommentService = di.record(di.key()('db'), (db) => {
         return comment;
     };
 
-    const deleteComment = async (id, userId) => {
+    const deleteComment = async (userId, id) => {
         const [comment, index] = await getById(id);
         if (!comment || comment.userId !== userId) {
             throw new Error('No comment was found by id', id);
@@ -39,12 +39,37 @@ const CommentService = di.record(di.key()('db'), (db) => {
         return comment;
     };
 
+    const deleteComments = async (userId, ids) => {
+        const userComments = await getUserComments(userId);
+        const userCommentsSet = new Set(userComments.map(({ id }) => id));
+        const idsSet = new Set(ids);
+
+        db.data.comments = db.data.comments.filter((comment) => {
+            const shouldDelete = idsSet.has(comment.id) && userCommentsSet.has(comment.id);
+            return !shouldDelete;
+        });
+
+        db.update();
+    };
+
+    const ensureCommentsExist = async (userId, commentIds) => {
+        const userComments = await getUserComments(userId);
+        const userCommentsSet = new Set(userComments.map(({ id }) => id));
+
+        const allCommentsExist = commentIds.every((id) => userCommentsSet.has(id));
+        if (!allCommentsExist) {
+            throw new Error('Not all provided comments exist');
+        }
+    };
+
     return {
         getById,
         getUserComments,
         getTodoComments,
         createComment,
         deleteComment,
+        deleteComments,
+        ensureCommentsExist,
     };
 });
 
