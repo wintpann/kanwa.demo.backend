@@ -19,30 +19,30 @@ const PriorityService = di.record(di.key()('db'), (db) => {
         return priority;
     };
 
-    const createPriority = async ({ title, color, userId, order }) => {
+    const isTitleUnique = async (userId, title) => {
+        const userPriorities = await getUserPriorities(userId);
+        const hasSamePriority = userPriorities.some((priority) => priority.title === title);
+
+        return !hasSamePriority;
+    };
+
+    const createPriority = async ({ title, color, userId }) => {
         const priority = {
             title,
             color,
             userId,
             id: v4(),
-            order,
         };
-
-        if (!priority.order) {
-            const userPriorities = await getUserPriorities(userId);
-            const maxOrder = Math.max(...userPriorities.map(({ order }) => order), 0);
-            priority.order = maxOrder + 1;
-        }
 
         db.data.priorities.push(priority);
         db.update();
         return priority;
     };
 
-    const updatePriority = async (id, callback) => {
-        const [priority, index] = getById(id);
+    const updatePriority = async (userId, id, callback) => {
+        const [priority, index] = await getById(id);
 
-        if (!priority) {
+        if (!priority || priority.userId !== userId) {
             throw new Error('No priority was found by id', id);
         }
 
@@ -53,9 +53,10 @@ const PriorityService = di.record(di.key()('db'), (db) => {
         return updated;
     };
 
-    const deletePriority = async (id) => {
+    const deletePriority = async (userId, id) => {
         const [priority, index] = await getById(id);
-        if (!priority) {
+
+        if (!priority || priority.userId !== userId) {
             throw new Error('No priority was found by id', id);
         }
 
@@ -82,6 +83,7 @@ const PriorityService = di.record(di.key()('db'), (db) => {
         updatePriority,
         deletePriority,
         ensurePriorityExists,
+        isTitleUnique,
     };
 });
 

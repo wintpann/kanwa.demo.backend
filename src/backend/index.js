@@ -23,5 +23,6 @@ app.use('/api', Routers.UserRouter);
 app.use('/api', Routers.TodoRouter);
 app.use('/api', Routers.CommentRouter);
 app.use('/api', Routers.LabelRouter);
+app.use('/api', Routers.PriorityRouter);
 
 app.listen(process.env.PORT, () => console.log('BACKEND IS RUNNING ON PORT', process.env.PORT));
