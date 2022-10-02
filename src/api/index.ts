@@ -10,7 +10,7 @@
  */
 
 export interface Status {
-    kind: 'success' | 'error' | 'auth_required';
+    kind: 'error' | 'success' | 'auth_required';
     message?: string;
     notifyMessage?: string;
 }
@@ -149,5 +149,90 @@ export namespace Api {
         export type RequestBody = never;
         export type RequestHeaders = { access_token: string };
         export type ResponseBody = { data: { id: string; login: string }; status: Status };
+    }
+    /**
+     * @description Create a todo
+     * @tags Todo
+     * @name TodosCreate
+     * @request POST:/api/todos
+     */
+    export namespace TodosCreate {
+        export type RequestParams = {};
+        export type RequestQuery = {};
+        export type RequestBody = {
+            title: string;
+            description?: string;
+            checked?: string;
+            labelIds?: string[];
+            priorityId?: string;
+            dueDateISO?: string;
+        };
+        export type RequestHeaders = { access_token: string };
+        export type ResponseBody = { status: Status; data: Todo };
+    }
+    /**
+     * @description Get user todos
+     * @tags Todo
+     * @name TodosList
+     * @request GET:/api/todos
+     */
+    export namespace TodosList {
+        export type RequestParams = {};
+        export type RequestQuery = {
+            checked?: string;
+            labelIds?: string[];
+            priorityIds?: string[];
+            fromDueDate?: string;
+            toDueDate?: string;
+        };
+        export type RequestBody = never;
+        export type RequestHeaders = { access_token: string };
+        export type ResponseBody = { status: Status; data: Todo[] };
+    }
+    /**
+     * @description Update a todo
+     * @tags Todo
+     * @name TodosUpdate
+     * @request PUT:/api/todos/{todoId}
+     */
+    export namespace TodosUpdate {
+        export type RequestParams = { todoId: string };
+        export type RequestQuery = {};
+        export type RequestBody = {
+            title?: string;
+            description?: string | null;
+            checked?: string;
+            labelIds?: string[];
+            priorityId?: string | null;
+            dueDateISO?: string | null;
+        };
+        export type RequestHeaders = { access_token: string };
+        export type ResponseBody = { status: Status; data: Todo };
+    }
+    /**
+     * @description Get a todo by id
+     * @tags Todo
+     * @name TodosDetail
+     * @request GET:/api/todos/{todoId}
+     */
+    export namespace TodosDetail {
+        export type RequestParams = { todoId: string };
+        export type RequestQuery = {};
+        export type RequestBody = never;
+        export type RequestHeaders = { access_token: string };
+        export type ResponseBody = { status: Status; data: Todo };
+    }
+    /**
+     * @description Delete a todo
+     * @tags Todo
+     * @name TodosDelete
+     * @request DELETE:/api/todos/{todoId}
+     */
+    export namespace TodosDelete {
+        export type RequestParams = { todoId: string };
+        export type RequestQuery = {};
+        export type RequestBody = never;
+        export type RequestHeaders = { access_token: string };
+        export type ResponseBody = { status: Status };
     }
 }

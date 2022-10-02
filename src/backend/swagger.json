@@ -351,6 +351,494 @@
           }
         }
       }
+    },
+    "/api/todos": {
+      "post": {
+        "tags": [
+          "Todo"
+        ],
+        "description": "Create a todo",
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Todo fields",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "checked": {
+                    "type": "string"
+                  },
+                  "labelIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "required": true
+                    }
+                  },
+                  "priorityId": {
+                    "type": "string"
+                  },
+                  "dueDateISO": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "required": true,
+                      "$ref": "#/components/schemas/Status"
+                    },
+                    "data": {
+                      "required": true,
+                      "$ref": "#/components/schemas/Todo"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Todo created"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Todo data invalid"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Provided access token is not valid"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Todo"
+        ],
+        "description": "Get user todos",
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "checked",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "labelIds",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "required": true
+              }
+            }
+          },
+          {
+            "name": "priorityIds",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "required": true
+              }
+            }
+          },
+          {
+            "name": "fromDueDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "toDueDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "required": true,
+                      "$ref": "#/components/schemas/Status"
+                    },
+                    "data": {
+                      "required": true,
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Todo"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Found user todos"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Query params invalid"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Provided access token is not valid"
+          }
+        }
+      }
+    },
+    "/api/todos/{todoId}": {
+      "put": {
+        "tags": [
+          "Todo"
+        ],
+        "description": "Update a todo",
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Todo fields",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "checked": {
+                    "type": "string"
+                  },
+                  "labelIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "required": true
+                    }
+                  },
+                  "priorityId": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "dueDateISO": {
+                    "type": "string",
+                    "format": "date-time",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "required": true,
+                      "$ref": "#/components/schemas/Status"
+                    },
+                    "data": {
+                      "required": true,
+                      "$ref": "#/components/schemas/Todo"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Todo updated"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Todo data invalid"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Provided access token is not valid"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Todo"
+        ],
+        "description": "Get a todo by id",
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "todoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "required": true,
+                      "$ref": "#/components/schemas/Status"
+                    },
+                    "data": {
+                      "required": true,
+                      "$ref": "#/components/schemas/Todo"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Todo updated"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Todo not found"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Provided access token is not valid"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Todo"
+        ],
+        "description": "Delete a todo",
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "todoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "required": true,
+                      "$ref": "#/components/schemas/Status"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Todo deleted"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Todo id invalid"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Provided access token is not valid"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -361,8 +849,8 @@
           "kind": {
             "type": "string",
             "enum": [
-              "success",
               "error",
+              "success",
               "auth_required"
             ],
             "required": true
