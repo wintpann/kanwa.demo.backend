@@ -34,6 +34,8 @@
     "react-dom": "18.2.0",
     "react-error-boundary": "^3.1.4",
     "react-scripts": "^5.0.0",
+    "swagger-typescript-api": "^10.0.1",
+    "swagger-ui-express": "^4.5.0",
     "typescript": "^4.1.2",
     "uuid": "^9.0.0",
     "yup": "^0.32.11"
@@ -41,11 +43,15 @@
   "type": "module",
   "scripts": {
     "start:backend": "nodemon --ignore 'db.json' src/backend",
+    "api:types": "swagger-typescript-api --no-client --route-types --output ./src/api -n index.ts -p http://localhost:4000/swagger/json",
     "lint": "lint-staged",
     "lint-all:eslint": "eslint src --fix --quiet --no-error-on-unmatched-pattern",
     "lint-all:prettier": "prettier --write \"./src/**/*.{scss,js,ts,tsx}\" --no-error-on-unmatched-pattern",
     "lint-all": "yarn lint-all:prettier && yarn lint-all:eslint",
     "prepare": "husky install"
+  },
+  "resolutions": {
+    "swagger-typescript-api/**/typescript": "4.3.5"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [

@@ -46,7 +46,7 @@ const TodoService = di.record(
 
         const createTodo = async ({
             title,
-            description,
+            description = null,
             labelIds = [],
             priorityId = null,
             dueDateISO = null,

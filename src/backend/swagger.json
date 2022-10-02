@@ -1,0 +1,502 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "TodoList backend API",
+    "version": "0.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:4000/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Comment"
+    },
+    {
+      "name": "Label"
+    },
+    {
+      "name": "Priority"
+    },
+    {
+      "name": "Todo"
+    },
+    {
+      "name": "User"
+    }
+  ],
+  "paths": {
+    "/api/users/signup": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "description": "Signup a user",
+        "requestBody": {
+          "description": "User credentials",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "login": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "password": {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "required": true,
+                      "properties": {
+                        "accessToken": {
+                          "type": "string",
+                          "required": true
+                        },
+                        "refreshToken": {
+                          "type": "string",
+                          "required": true
+                        },
+                        "user": {
+                          "type": "object",
+                          "required": true,
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "required": true
+                            },
+                            "login": {
+                              "type": "string",
+                              "required": true
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "User created successfully"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "User not created"
+          }
+        }
+      }
+    },
+    "/api/users/login": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "description": "Login a user",
+        "requestBody": {
+          "description": "User credentials",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "login": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "password": {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "required": true,
+                      "properties": {
+                        "accessToken": {
+                          "type": "string",
+                          "required": true
+                        },
+                        "refreshToken": {
+                          "type": "string",
+                          "required": true
+                        },
+                        "user": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "required": true
+                            },
+                            "login": {
+                              "type": "string",
+                              "required": true
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "User logged in successfully"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "User not logged in"
+          }
+        }
+      }
+    },
+    "/api/users/refresh": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "description": "Refresh tokens",
+        "parameters": [
+          {
+            "name": "refresh_token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "required": true,
+                      "properties": {
+                        "accessToken": {
+                          "type": "string",
+                          "required": true
+                        },
+                        "refreshToken": {
+                          "type": "string",
+                          "required": true
+                        },
+                        "user": {
+                          "type": "object",
+                          "required": true,
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "required": true
+                            },
+                            "login": {
+                              "type": "string",
+                              "required": true
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Tokens refreshed successfully"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Tokens not refreshed"
+          }
+        }
+      }
+    },
+    "/api/users/me": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "Get current logged user",
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "required": true,
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "required": true
+                        },
+                        "login": {
+                          "type": "string",
+                          "required": true
+                        }
+                      }
+                    },
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Provided access token is valid"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Provided access token is not valid"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Status": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "success",
+              "error",
+              "auth_required"
+            ],
+            "required": true
+          },
+          "message": {
+            "type": "string"
+          },
+          "notifyMessage": {
+            "type": "string"
+          }
+        }
+      },
+      "Comment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "008524ef-0e22-4e38-bf8f-8c721ebda817",
+            "required": true
+          },
+          "todoId": {
+            "type": "string",
+            "example": "008524ef-0e22-4e38-bf8f-8c721ebda817",
+            "required": true
+          },
+          "content": {
+            "type": "string",
+            "example": "Great todo, innit?",
+            "required": true
+          }
+        }
+      },
+      "Label": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "008524ef-0e22-4e38-bf8f-8c721ebda817",
+            "required": true
+          },
+          "title": {
+            "type": "string",
+            "example": "First things first",
+            "required": true
+          }
+        }
+      },
+      "Priority": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "008524ef-0e22-4e38-bf8f-8c721ebda817",
+            "required": true
+          },
+          "title": {
+            "type": "string",
+            "example": "First things first",
+            "required": true
+          },
+          "color": {
+            "type": "string",
+            "example": "#ff00ff",
+            "required": true
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "008524ef-0e22-4e38-bf8f-8c721ebda817",
+            "required": true
+          },
+          "login": {
+            "type": "string",
+            "example": "wintpann",
+            "required": true
+          }
+        }
+      },
+      "Todo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "008524ef-0e22-4e38-bf8f-8c721ebda817",
+            "required": true
+          },
+          "title": {
+            "type": "string",
+            "example": "Learn something",
+            "required": true
+          },
+          "description": {
+            "type": "string",
+            "example": "Learn something cool & interesting",
+            "required": true,
+            "nullable": true
+          },
+          "checked": {
+            "type": "boolean",
+            "example": false,
+            "required": true
+          },
+          "comments": {
+            "type": "array",
+            "required": true,
+            "items": {
+              "$ref": "#/components/schemas/Comment"
+            }
+          },
+          "labels": {
+            "type": "array",
+            "required": true,
+            "items": {
+              "$ref": "#/components/schemas/Label"
+            }
+          },
+          "priority": {
+            "$ref": "#/components/schemas/Priority",
+            "required": true,
+            "nullable": true
+          },
+          "dueDateISO": {
+            "type": "string",
+            "required": true,
+            "nullable": true,
+            "format": "date-time",
+            "example": "2022-10-01T18:00:00.000Z"
+          }
+        }
+      }
+    }
+  }
+}

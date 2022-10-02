@@ -22,7 +22,7 @@ const CreateTodoSchemaBody = Yup.object().shape({
 
 const UpdateTodoSchemaBody = Yup.object().shape({
     title: Yup.string().trim().min(1),
-    description: Yup.string().trim().min(1),
+    description: Yup.string().trim().min(1).nullable(),
     checked: Yup.boolean(),
     labelIds: Yup.array().of(Yup.string().trim().required()),
     priorityId: Yup.string().trim().nullable(),

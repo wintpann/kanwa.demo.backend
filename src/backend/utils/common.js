@@ -1,4 +1,4 @@
-import _isNil from 'lodash/isNil.js';
+import isUndefined from 'lodash/isUndefined.js';
 import _omitBy from 'lodash/omitBy.js';
 
 const findByPredicate = (array, predicate) => {
@@ -8,6 +8,6 @@ const findByPredicate = (array, predicate) => {
     return [array[index], index];
 };
 
-const cleanObject = (obj) => _omitBy(obj, _isNil);
+const cleanObject = (obj) => _omitBy(obj, isUndefined);
 
 export { findByPredicate, cleanObject };

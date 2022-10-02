@@ -1,11 +1,11 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { v4 as uuid } from 'uuid';
+import pick from 'lodash/pick.js';
 import { di } from '../../utils/di.js';
 import { findByPredicate } from '../../utils/common.js';
 import { mapToResponseError, RESPONSE, ResponseError } from '../../utils/response.js';
 import { AuthSchemaHeader, RefreshSchemaHeader } from './user.schema.js';
-import omit from 'lodash/omit.js';
 
 const UserService = di.record(di.key()('db'), (db) => {
     const createTokens = (user) => {
@@ -75,11 +75,11 @@ const UserService = di.record(di.key()('db'), (db) => {
     };
 
     const auth = async (req) => {
-        const authorization = await AuthSchemaHeader.validate(req.headers.authorization).catch(
+        const access_token = await AuthSchemaHeader.validate(req.headers.access_token).catch(
             mapToResponseError({ response: RESPONSE.AUTH_REQUIRED }),
         );
 
-        const payload = jwt.decode(authorization, process.env.JWT_SECRET);
+        const payload = jwt.decode(access_token, process.env.JWT_SECRET);
 
         if (!payload) {
             throw new ResponseError({
@@ -89,7 +89,7 @@ const UserService = di.record(di.key()('db'), (db) => {
         }
 
         try {
-            jwt.verify(authorization, process.env.JWT_SECRET);
+            jwt.verify(access_token, process.env.JWT_SECRET);
         } catch (e) {
             if (e instanceof jwt.TokenExpiredError) {
                 throw new ResponseError({
@@ -112,7 +112,7 @@ const UserService = di.record(di.key()('db'), (db) => {
     };
 
     const refresh = async (req) => {
-        const refreshToken = await RefreshSchemaHeader.validate(req.headers.refresh).catch(
+        const refreshToken = await RefreshSchemaHeader.validate(req.headers.refresh_token).catch(
             mapToResponseError({ response: RESPONSE.AUTH_REQUIRED }),
         );
 
@@ -127,7 +127,7 @@ const UserService = di.record(di.key()('db'), (db) => {
         return { user, accessToken, refreshToken: newRefreshToken };
     };
 
-    const respondWith = (user) => omit(user, ['id', 'login']);
+    const respondWith = (user) => pick(user, ['id', 'login']);
 
     return {
         createTokens,
