@@ -89,11 +89,7 @@ export namespace Api {
         export type RequestBody = { login: string; password: string };
         export type RequestHeaders = {};
         export type ResponseBody = {
-            data: {
-                accessToken: string;
-                refreshToken: string;
-                user: { id: string; login: string };
-            };
+            data: { accessToken: string; refreshToken: string; user: User };
             status: Status;
         };
     }
@@ -109,11 +105,7 @@ export namespace Api {
         export type RequestBody = { login: string; password: string };
         export type RequestHeaders = {};
         export type ResponseBody = {
-            data: {
-                accessToken: string;
-                refreshToken: string;
-                user: { id: string; login: string };
-            };
+            data: { accessToken: string; refreshToken: string; user: User };
             status: Status;
         };
     }
@@ -129,11 +121,7 @@ export namespace Api {
         export type RequestBody = never;
         export type RequestHeaders = { refresh_token: string };
         export type ResponseBody = {
-            data: {
-                accessToken: string;
-                refreshToken: string;
-                user: { id: string; login: string };
-            };
+            data: { accessToken: string; refreshToken: string; user: User };
             status: Status;
         };
     }
@@ -148,7 +136,7 @@ export namespace Api {
         export type RequestQuery = {};
         export type RequestBody = never;
         export type RequestHeaders = { access_token: string };
-        export type ResponseBody = { data: { id: string; login: string }; status: Status };
+        export type ResponseBody = { data: User; status: Status };
     }
     /**
      * @description Delete a comment
@@ -177,6 +165,110 @@ export namespace Api {
         export type ResponseBody = { status: Status; data: Comment };
     }
     /**
+     * @description Update a label
+     * @tags Label
+     * @name LabelsUpdate
+     * @request PUT:/api/labels/{labelId}
+     */
+    export namespace LabelsUpdate {
+        export type RequestParams = { labelId: string };
+        export type RequestQuery = {};
+        export type RequestBody = { title?: string };
+        export type RequestHeaders = { access_token: string };
+        export type ResponseBody = { status: Status; data: Label };
+    }
+    /**
+     * @description Delete a label
+     * @tags Label
+     * @name LabelsDelete
+     * @request DELETE:/api/labels/{labelId}
+     */
+    export namespace LabelsDelete {
+        export type RequestParams = { labelId: string };
+        export type RequestQuery = {};
+        export type RequestBody = never;
+        export type RequestHeaders = { access_token: string };
+        export type ResponseBody = { status: Status };
+    }
+    /**
+     * @description Get user labels
+     * @tags Label
+     * @name LabelsList
+     * @request GET:/api/labels
+     */
+    export namespace LabelsList {
+        export type RequestParams = {};
+        export type RequestQuery = {};
+        export type RequestBody = never;
+        export type RequestHeaders = { access_token: string };
+        export type ResponseBody = { status: Status; data: Label[] };
+    }
+    /**
+     * @description Create a label
+     * @tags Label
+     * @name LabelsCreate
+     * @request POST:/api/labels
+     */
+    export namespace LabelsCreate {
+        export type RequestParams = {};
+        export type RequestQuery = {};
+        export type RequestBody = { title: string };
+        export type RequestHeaders = { access_token: string };
+        export type ResponseBody = { status: Status; data: Label };
+    }
+    /**
+     * @description Delete a priority
+     * @tags Priority
+     * @name PrioritiesDelete
+     * @request DELETE:/api/priorities/{priorityId}
+     */
+    export namespace PrioritiesDelete {
+        export type RequestParams = { priorityId: string };
+        export type RequestQuery = {};
+        export type RequestBody = never;
+        export type RequestHeaders = { access_token: string };
+        export type ResponseBody = { status: Status };
+    }
+    /**
+     * @description Update a priority
+     * @tags Priority
+     * @name PrioritiesUpdate
+     * @request PUT:/api/priorities/{priorityId}
+     */
+    export namespace PrioritiesUpdate {
+        export type RequestParams = { priorityId: string };
+        export type RequestQuery = {};
+        export type RequestBody = { title?: string; color?: string };
+        export type RequestHeaders = { access_token: string };
+        export type ResponseBody = { status: Status; data: Priority };
+    }
+    /**
+     * @description Get user priorities
+     * @tags Priority
+     * @name PrioritiesList
+     * @request GET:/api/priorities
+     */
+    export namespace PrioritiesList {
+        export type RequestParams = {};
+        export type RequestQuery = {};
+        export type RequestBody = never;
+        export type RequestHeaders = { access_token: string };
+        export type ResponseBody = { status: Status; data: Priority[] };
+    }
+    /**
+     * @description Create a priority
+     * @tags Priority
+     * @name PrioritiesCreate
+     * @request POST:/api/priorities
+     */
+    export namespace PrioritiesCreate {
+        export type RequestParams = {};
+        export type RequestQuery = {};
+        export type RequestBody = { title: string; color: string };
+        export type RequestHeaders = { access_token: string };
+        export type ResponseBody = { status: Status; data: Priority };
+    }
+    /**
      * @description Create a todo
      * @tags Todo
      * @name TodosCreate
@@ -188,7 +280,6 @@ export namespace Api {
         export type RequestBody = {
             title: string;
             description?: string;
-            checked?: string;
             labelIds?: string[];
             priorityId?: string;
             dueDateISO?: string;

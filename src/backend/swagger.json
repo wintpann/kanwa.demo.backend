@@ -73,18 +73,8 @@
                           "required": true
                         },
                         "user": {
-                          "type": "object",
-                          "required": true,
-                          "properties": {
-                            "id": {
-                              "type": "string",
-                              "required": true
-                            },
-                            "login": {
-                              "type": "string",
-                              "required": true
-                            }
-                          }
+                          "$ref": "#/components/schemas/User",
+                          "required": true
                         }
                       }
                     },
@@ -163,17 +153,8 @@
                           "required": true
                         },
                         "user": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "string",
-                              "required": true
-                            },
-                            "login": {
-                              "type": "string",
-                              "required": true
-                            }
-                          }
+                          "$ref": "#/components/schemas/User",
+                          "required": true
                         }
                       }
                     },
@@ -242,18 +223,8 @@
                           "required": true
                         },
                         "user": {
-                          "type": "object",
-                          "required": true,
-                          "properties": {
-                            "id": {
-                              "type": "string",
-                              "required": true
-                            },
-                            "login": {
-                              "type": "string",
-                              "required": true
-                            }
-                          }
+                          "$ref": "#/components/schemas/User",
+                          "required": true
                         }
                       }
                     },
@@ -310,18 +281,8 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "type": "object",
-                      "required": true,
-                      "properties": {
-                        "id": {
-                          "type": "string",
-                          "required": true
-                        },
-                        "login": {
-                          "type": "string",
-                          "required": true
-                        }
-                      }
+                      "$ref": "#/components/schemas/User",
+                      "required": true
                     },
                     "status": {
                       "$ref": "#/components/schemas/Status",
@@ -1215,9 +1176,6 @@
                     "required": true
                   },
                   "description": {
-                    "type": "string"
-                  },
-                  "checked": {
                     "type": "string"
                   },
                   "labelIds": {
