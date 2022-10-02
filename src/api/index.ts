@@ -151,6 +151,32 @@ export namespace Api {
         export type ResponseBody = { data: { id: string; login: string }; status: Status };
     }
     /**
+     * @description Delete a comment
+     * @tags Comment
+     * @name CommentsDelete
+     * @request DELETE:/api/comments/{commentId}
+     */
+    export namespace CommentsDelete {
+        export type RequestParams = { commentId: string };
+        export type RequestQuery = {};
+        export type RequestBody = never;
+        export type RequestHeaders = { access_token: string };
+        export type ResponseBody = { status: Status };
+    }
+    /**
+     * @description Create a comment
+     * @tags Comment
+     * @name CommentsCreate
+     * @request POST:/api/comments
+     */
+    export namespace CommentsCreate {
+        export type RequestParams = {};
+        export type RequestQuery = {};
+        export type RequestBody = { todoId: string; content: string };
+        export type RequestHeaders = { access_token: string };
+        export type ResponseBody = { status: Status; data: Comment };
+    }
+    /**
      * @description Create a todo
      * @tags Todo
      * @name TodosCreate

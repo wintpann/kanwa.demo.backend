@@ -352,6 +352,841 @@
         }
       }
     },
+    "/api/comments/{commentId}": {
+      "delete": {
+        "tags": [
+          "Comment"
+        ],
+        "description": "Delete a comment",
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "commentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "required": true,
+                      "$ref": "#/components/schemas/Status"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Comment deleted"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "No comment found"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Provided access token is not valid"
+          }
+        }
+      }
+    },
+    "/api/comments": {
+      "post": {
+        "tags": [
+          "Comment"
+        ],
+        "description": "Create a comment",
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Comment fields",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "todoId": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "content": {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "required": true,
+                      "$ref": "#/components/schemas/Status"
+                    },
+                    "data": {
+                      "required": true,
+                      "$ref": "#/components/schemas/Comment"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Comment created"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Comment data invalid"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Provided access token is not valid"
+          }
+        }
+      }
+    },
+    "/api/labels/{labelId}": {
+      "put": {
+        "tags": [
+          "Label"
+        ],
+        "description": "Update a label",
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "labelId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Label fields",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "required": true,
+                      "$ref": "#/components/schemas/Status"
+                    },
+                    "data": {
+                      "required": true,
+                      "$ref": "#/components/schemas/Label"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Label updated"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "No label found or data invalid"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Provided access token is not valid"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Label"
+        ],
+        "description": "Delete a label",
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "labelId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "required": true,
+                      "$ref": "#/components/schemas/Status"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Label deleted"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "No label found"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Provided access token is not valid"
+          }
+        }
+      }
+    },
+    "/api/labels": {
+      "get": {
+        "tags": [
+          "Label"
+        ],
+        "description": "Get user labels",
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "required": true,
+                      "$ref": "#/components/schemas/Status"
+                    },
+                    "data": {
+                      "required": true,
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Label"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Found user labels"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Query params invalid"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Provided access token is not valid"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Label"
+        ],
+        "description": "Create a label",
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Label fields",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "required": true,
+                      "$ref": "#/components/schemas/Status"
+                    },
+                    "data": {
+                      "required": true,
+                      "$ref": "#/components/schemas/Label"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Label created"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Label data invalid"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Provided access token is not valid"
+          }
+        }
+      }
+    },
+    "/api/priorities/{priorityId}": {
+      "delete": {
+        "tags": [
+          "Priority"
+        ],
+        "description": "Delete a priority",
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "priorityId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "required": true,
+                      "$ref": "#/components/schemas/Status"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Priority deleted"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "No priority found"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Provided access token is not valid"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Priority"
+        ],
+        "description": "Update a priority",
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "priorityId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Priority fields",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "color": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "required": true,
+                      "$ref": "#/components/schemas/Status"
+                    },
+                    "data": {
+                      "required": true,
+                      "$ref": "#/components/schemas/Priority"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Priority updated"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "No priority found or data invalid"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Provided access token is not valid"
+          }
+        }
+      }
+    },
+    "/api/priorities": {
+      "get": {
+        "tags": [
+          "Priority"
+        ],
+        "description": "Get user priorities",
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "required": true,
+                      "$ref": "#/components/schemas/Status"
+                    },
+                    "data": {
+                      "required": true,
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Priority"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Found user priorities"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Query params invalid"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Provided access token is not valid"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Priority"
+        ],
+        "description": "Create a priority",
+        "parameters": [
+          {
+            "name": "access_token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Priority fields",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "color": {
+                    "type": "string",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "required": true,
+                      "$ref": "#/components/schemas/Status"
+                    },
+                    "data": {
+                      "required": true,
+                      "$ref": "#/components/schemas/Priority"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Priority created"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Priority data invalid"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "$ref": "#/components/schemas/Status",
+                      "required": true
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Provided access token is not valid"
+          }
+        }
+      }
+    },
     "/api/todos": {
       "post": {
         "tags": [
