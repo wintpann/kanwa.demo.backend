@@ -42,7 +42,7 @@
   },
   "type": "module",
   "scripts": {
-    "start:backend": "nodemon --ignore 'db.json' src/backend",
+    "start": "nodemon --ignore \"db.json\" src/index.js",
     "api:types": "swagger-typescript-api --no-client --route-types --output ./src/api -n index.ts -p http://localhost:4000/swagger/json",
     "lint": "lint-staged",
     "lint-all:eslint": "eslint src --fix --quiet --no-error-on-unmatched-pattern",

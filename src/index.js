@@ -7,7 +7,8 @@ import swaggerDoc from './swagger.json' assert { type: 'json' };
 import { resolve } from './utils/dirname.js';
 import { initLowDB } from './db/index.js';
 import { createRouters } from './modules/routers.js';
-dotenv.config({ path: resolve(import.meta.url, '.env') });
+
+dotenv.config({ path: resolve(import.meta.url, '..', '.env') });
 
 const app = express();
 
